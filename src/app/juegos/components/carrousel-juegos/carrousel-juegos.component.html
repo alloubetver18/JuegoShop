@@ -1,0 +1,79 @@
+<div id="{{ marcaidCarrousel }}" class="carousel slide">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <div *ngFor="let item of listajuegosshortp1">
+        <app-juego-datos [infojuego]="item"></app-juego-datos>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <div *ngFor="let item of listajuegosshortp2">
+        <app-juego-datos [infojuego]="item"></app-juego-datos>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <div *ngFor="let item of listajuegosshortp3">
+        <app-juego-datos [infojuego]="item"></app-juego-datos>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="marcaidCarrousel === 'vendidos'">
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#vendidos"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#vendidos"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <div *ngIf="marcaidCarrousel === 'estrenos'">
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#estrenos"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#estrenos"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <div *ngIf="marcaidCarrousel === 'lanzamientos'">
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#lanzamientos"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#lanzamientos"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<section *ngIf="!juego; else divJuego">
+  <h1>Cargando...</h1>
+</section>
+
+<ng-template #divJuego>
+  <section class="box">
+    <section class="subbox">
+      <h1>{{ juego[0].NombreJuego }}</h1>
+      <hr />
+      <br />
+      <img [src]="juego[0].IdJuego | imagen" alt="" />
+    </section>
+    <section class="subbox">
+      <h1>
+        plataforma:
+        <div class="iconos">
+          <span class="icono" *ngFor="let item of plataformas">
+            <img
+              class="icono_img"
+              [src]="item.NombrePlataforma | icono"
+              [alt]="item.NombrePlataforma"
+            />
+          </span>
+        </div>
+      </h1>
+      <h3>Precio: {{ plataformasJuego[0].Precio }}</h3>
+      <button class="btn btn-primary" (click)="openSnackBar()">
+        Añadir al carrito
+      </button>
+      <br />
+      <hr />
+      <p>
+        {{ juego[0].Descripcion }}
+      </p>
+      <hr />
+      <br />
+    </section>
+  </section>
+</ng-template>

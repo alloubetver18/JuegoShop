@@ -1,0 +1,108 @@
+*{
+  padding: 10px;
+
+}
+
+img{
+  width: 250px;
+  height: 125px;
+  margin: 0px;
+  padding: 0px;
+  border-bottom-left-radius: 15px;
+}
+
+.empresa ul{
+  list-style: none;
+  font-size: 1.3rem;
+}
+
+.sociales ul{
+  list-style: none;
+  display: block;
+}
+
+.icono{
+  width: 250px;
+  height: 125px;
+  background-image: url(../../../assets/JuegoShop.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 5px;
+}
+
+.icono a{
+  width: 250px;
+  height: 125px;
+  display: block;
+}
+
+.flex{
+  display: flex;
+  background-color: rgba(127, 159, 255, 0.598);
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}
+
+.flex, .copyright{
+  background-color: rgba(127, 159, 255, 0.598);
+}
+
+.espacio{
+  width: 300px;
+}
+
+.nav{
+  height: 50%;
+}
+
+.enlaces{
+  color: #fff;
+  text-decoration: none;
+  line-height: 70px;
+  display: inline-block;
+  width: 80px;
+  padding: 0 40px;
+}
+
+a.enlaces:hover{
+  background-color: #fff;
+  color: purple;
+  border-radius: 50%;
+
+}
+
+.fb{
+  background-image: url(../../../assets/icon-fb.svg);
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.yt{
+  background-image: url(../../../assets/icon-yt.svg);
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ld{
+  background-image: url(../../../assets/icon-ld.svg);
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.twch{
+  background-image: url(../../../assets/icon-tch.svg);
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.twtr{
+  background-image: url(../../../assets/icon-tw.svg);
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}

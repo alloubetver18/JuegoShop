@@ -1,1 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; background-image: linear-gradient(to top, #a18cd1a8 0%, #fbc2ebbb 100%), url(assets/bg03.jpg); background-position: fixed; background-attachment: fixed;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; /* background-image: url(assets/bg03.jpg); */}
+

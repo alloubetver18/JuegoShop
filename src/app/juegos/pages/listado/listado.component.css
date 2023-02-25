@@ -1,0 +1,33 @@
+.container{
+  height: 1000px;
+  margin: 20px 0;
+  background-color: rgba(127, 159, 255, 0.598);
+  border-radius: 15px;
+}
+
+.sidenav{
+  background-color: rgba(127, 159, 255, 0.598);
+  width: 20%;
+  text-align: center;
+  padding-top: 25px;
+}
+
+.busqueda{
+  padding-left: 30px;
+  padding-top: 10px;
+  width: 60%;
+  margin: 0 auto;
+  display: block;
+}
+
+.card_games{
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+.card_games__item{
+  padding-top: 10px;
+}
+
+

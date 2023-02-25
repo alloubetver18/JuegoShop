@@ -1,0 +1,19 @@
+<div class="card">
+  <img [src]="infojuego.IdJuego | imagen" class="card-img-top" alt="..." />
+  <div class="card-body">
+    <h3 class="card-title">{{ infojuego.NombreJuego }}</h3>
+    <p class="card-text">{{ infojuego.Precio }}€</p>
+    <a
+      *ngIf="estaEnElPadre"
+      class="btn btn-primary"
+      [routerLink]="['listado/juego/', infojuego.IdJuego]"
+      >Más Informacion</a
+    >
+    <a
+      *ngIf="!estaEnElPadre"
+      class="btn btn-primary"
+      [routerLink]="['../juego/', infojuego.IdJuego]"
+      >Más Informacion</a
+    >
+  </div>
+</div>

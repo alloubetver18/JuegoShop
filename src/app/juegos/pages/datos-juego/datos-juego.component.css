@@ -1,0 +1,57 @@
+img {
+  display: block;
+  width: 80%;
+  border-radius: 5px;
+  margin: 0 auto;
+}
+
+.box {
+  background-color: #f2f2f2;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  row-gap: 30px;
+  margin: 20px 0;
+  border-radius: 15px;
+}
+
+.iconos{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.icono{
+  padding-top: 20px;
+}
+
+.icono_img{
+  width: 40px;
+  height: 40px;
+}
+
+@media screen and (max-width: 599px) {
+  .box {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    column-gap: 30px;
+  }
+}
+
+.subbox {
+  flex: 45%;
+  padding-right: 20px;
+  margin: 30px;
+}
+
+.subbox h1{
+  text-align: center;
+}
+
+mat-card {
+  margin-right: 20px;
+}
+
+button {
+  margin-left: 15px;
+}
