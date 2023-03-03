@@ -1,0 +1,50 @@
+<div mat-dialog-content class="contenido">
+  <span>Login:</span>
+  <br />
+  <form
+    class="example-form"
+    (ngSubmit)="entrar()"
+    autocomplete="off"
+    [formGroup]="miFormulario"
+  >
+    <table class="example-full-width" cellspacing="0">
+      <tr>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Usuario</mat-label>
+            <input
+              type="text"
+              matInput
+              class="form-control"
+              formControlName="usuario"
+            />
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Contraseña</mat-label>
+            <input
+              type="password"
+              matInput
+              class="form-control"
+              formControlName="pass"
+            />
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+    <div mat-dialog-actions>
+      <button type="submit" mat-button>Entrar</button>
+      <button mat-button mat-dialog-close>Salir</button>
+    </div>
+  </form>
+</div>
+
+<!-- <div mat-dialog-content class="contenido">
+  <p>Error: Usuario no encontrado.</p>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cerrar</button>
+  </div>
+</div> -->

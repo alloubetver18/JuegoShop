@@ -143,4 +143,19 @@ export class CarrouselJuegosComponent {
       });
     }
   }
+
+  //TODO Función que busque los juegos más vendido. Para ello, necesitará cruzar varias consultas:
+  //- Contar el número de ejemplares vendido en los últimos 30 dias
+  //- Tomar los 12 que hayan sido los más vendidos por su Id
+  //- Tomar la lista y buscar sus datos en la BD
+
+  //TODO Función que busque los 12 juegos lanzados más recientemente a partir de la fecha del
+  //Sistema. Para ello, buscaremos por la fecha de hoy hacia atras y recuperamos 12 juegos.
+  //Luego, buscaremos los datos de dichos 12 juegos en su tabla y los cargaremos en el
+  //carrousel
+
+  //TODO Función que busque los 12 juegos que saldrán próximamente a partir de la fecha del
+  //Sistema. Para ello, buscaremos por la fecha de hoy hacia delante y recuperamos 12 juegos.
+  //Luego, buscaremos los datos de dichos 12 juegos en su tabla y los cargaremos en el
+  //carrousel
 }

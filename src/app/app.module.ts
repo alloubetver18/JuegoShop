@@ -7,6 +7,7 @@ import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { JuegosModule } from './juegos/juegos.module';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { JuegosModule } from './juegos/juegos.module';
     HttpClientModule,
     BrowserAnimationsModule,
     JuegosModule,
+    MaterialModule,
   ],
   exports: [SharedModule],
 })

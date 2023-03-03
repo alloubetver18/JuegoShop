@@ -5,7 +5,6 @@ export interface DBJuegoshopBeta {
   Plataformas: Plataforma[];
   JuegosPlataformas: JuegosPlataforma[];
   Codigos: Codigo[];
-  Usuarios: Usuario[];
   Cestas: Cesta[];
   CodigosCestas: CodigosCesta[];
 }
@@ -58,12 +57,4 @@ export interface JuegosPlataforma {
 export interface Plataforma {
   IdPlataforma: number;
   NombrePlataforma: string;
-}
-
-export interface Usuario {
-  idUsuario: number;
-  Nombre: string;
-  Email: string;
-  Pass: string;
-  ImgPerfil: string;
 }

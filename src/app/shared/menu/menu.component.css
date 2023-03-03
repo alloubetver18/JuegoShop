@@ -15,7 +15,7 @@
 }
 
 
-.enlaces{
+.enlaces, .login_contain{
   color: #fff;
   text-decoration: none;
   line-height: 70px;
@@ -24,13 +24,60 @@
   padding: 0 40px;
 }
 
-a.enlaces:hover{
+.enlaces:hover{
   background-color: #fff;
   color: purple;
 }
 
+.login_contain{
+  color: #000;
+  width: 250px;
+  line-height: 25px;
+}
+
 a.enlaces:last-of-type:hover{
   border-bottom-right-radius: 15px;
+}
+
+.subenlace{
+  width: 180px;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.seriesx, .seriesx:hover{
+  background-image: url(../../../assets/icon-seriesx-s.png);
+  background-size: 75px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.seriess, .seriess:hover{
+  background-image: url(../../../assets/xbsx.png);
+  background-size: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ps4, .ps4:hover{
+  background-image: url(../../../assets/icon-ps4.svg);
+  background-size: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ps5, .ps5:hover{
+  background-image: url(../../../assets/ps5.png);
+  background-size: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.icono-menu{
+  width: 50px;
+  height: 50px;
+  display: block;
+  position: center;
 }
 
 .xbox{
@@ -63,6 +110,13 @@ a.enlaces:last-of-type:hover{
 
 .login{
   background-image: url(../../../assets/bx-user.svg);
+  background-size: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.logout{
+  background-image: url(../../../assets/bx-exit.svg);
   background-size: 50px;
   background-repeat: no-repeat;
   background-position: center;

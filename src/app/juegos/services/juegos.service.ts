@@ -6,7 +6,6 @@ import {
   Juego,
   Plataforma,
   JuegosPlataforma,
-  JuegoShort,
 } from '../interfaces/juegos.interfaces';
 
 @Injectable({
@@ -39,6 +38,10 @@ export class JuegosService {
   //TODO Obtener de la base de datos un listado con los 12 juegos más vendidos hasta
   //ahora
   getJuegosMasVendidos() {}
+
+  //TODO Obtener de la base de datos un listado con los próximos 12 lanzamientos de
+  //cualquier plataforma
+  getJuegosProximos() {}
 
   //TODO Obtener todas las plataformas para las que existe un juego concreto
   getPlataformasdeJuegoporId(idJuego: number): Observable<JuegosPlataforma[]> {

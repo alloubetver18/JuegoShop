@@ -30,4 +30,11 @@
   padding-top: 10px;
 }
 
+.spinner{
+  display: block;
+  width: 1px;
+  height: 1px;
+  margin: auto;
+}
+
 

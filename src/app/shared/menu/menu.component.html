@@ -1,56 +1,99 @@
-<!-- <nav class="nav">
-  <a
-    href="/listado/XBox"
-    class="enlaces xbox"
-    title="Xbox"
-    placeholder="Xbox"
-  ></a>
-  <a
-    href="/listado/PS"
-    class="enlaces ps"
-    title="Play Station"
-    placeholder="Play Station"
-  ></a>
-  <a
-    href="/listado/Nintendo"
-    class="enlaces nintendo"
-    title="Nintendo"
-    placeholder="Nintendo"
-  ></a>
-  <a href="/listado/PC" class="enlaces steam" title="PC" placeholder="PC"></a>
-  <a href="#" title="Login" class="enlaces login"></a>
-  <a href="#" title="Cesta" class="enlaces cesta"></a>
-</nav> -->
-
 <nav class="nav">
-  <a
-    href="#"
+  <button
+    mat-button
+    [matMenuTriggerFor]="menu"
     class="enlaces xbox"
-    title="Xbox"
-    placeholder="Xbox"
-    [routerLink]="['/listado/', 'XBox']"
-  ></a>
-  <a
-    href="#"
+    title="XBox"
+    placeholder="XBox"
+  ></button>
+  <mat-menu #menu="matMenu">
+    <button
+      mat-menu-item
+      class="subenlace seriesx"
+      [routerLink]="['/listado/', 'XBox Series X/S']"
+      title="XBox Series X/S"
+      placeholder="XBox Series X/S"
+    ></button>
+    <button
+      mat-menu-item
+      class="subenlace seriess"
+      [routerLink]="['/listado/', 'XBox One X']"
+      title="XBox One"
+      placeholder="XBox One"
+    ></button>
+  </mat-menu>
+
+  <button
+    mat-button
+    [matMenuTriggerFor]="menups"
     class="enlaces ps"
-    title="Play Station"
-    placeholder="Play Station"
-    [routerLink]="['/listado/', 'PS']"
-  ></a>
+    title="PS"
+    placeholder="PS"
+  ></button>
+  <mat-menu #menups="matMenu">
+    <button
+      mat-menu-item
+      class="subenlace ps4"
+      [routerLink]="['/listado/', 'PS4']"
+      title="PS4"
+      placeholder="PS4"
+    ></button>
+    <button
+      mat-menu-item
+      class="subenlace ps5"
+      [routerLink]="['/listado/', 'PS5']"
+      title="PS5"
+      placeholder="PS5"
+    ></button>
+  </mat-menu>
+
   <a
-    href="#"
+    href=""
     class="enlaces nintendo"
     title="Nintendo"
     placeholder="Nintendo"
-    [routerLink]="['/listado/', 'Nintendo']"
+    [routerLink]="['/listado/', 'Nintendo Switch']"
   ></a>
   <a
-    href="#"
+    href=""
     class="enlaces steam"
     title="PC"
     placeholder="PC"
     [routerLink]="['/listado/', 'PC']"
   ></a>
-  <a href="#" title="Login" class="enlaces login"></a>
-  <a href="#" title="Cesta" class="enlaces cesta"></a>
+
+  <a
+    title="Login"
+    class="enlaces login"
+    (click)="openDialogLogin()"
+    *ngIf="!usuarioLogueado"
+  ></a>
+  <a
+    title="Logout"
+    class="enlaces logout"
+    (click)="SalirSistema()"
+    *ngIf="usuarioLogueado"
+  ></a>
+  <!-- <a title="Logout" class="enlaces logout" (click)="openDialogLogin()"></a> -->
+
+  <!-- <button
+    mat-button
+    [matMenuTriggerFor]="menulogin"
+    class="enlaces login"
+    title="login"
+    placeholder="login"
+  ></button>
+  <mat-menu #menulogin="matMenu">
+    <button
+      mat-menu-item
+      class="subenlace salir"
+      title="Salir"
+      placeholder="Salir"
+    ></button>
+  </mat-menu> -->
+  <a
+    title="Cesta"
+    class="enlaces cesta"
+    (click)="openDialogEnConstruccion()"
+  ></a>
 </nav>

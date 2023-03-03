@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, tap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { JuegoencestaComponent } from '../../components/juegoencesta/juegoencesta.component';
 import {
   Juego,
@@ -25,58 +25,56 @@ export class DatosJuegoComponent {
     NombrePlataforma: '',
   };
   rutaimagen: String = '../../../../assets/';
+  durationInSeconds = 2;
   constructor(
     private activatedRoute: ActivatedRoute,
     private juegosService: JuegosService,
     private _snackBar: MatSnackBar
   ) {}
+
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(({ id }) => console.log(id));
-
-    this.activatedRoute.params
-      .pipe(switchMap(({ id }) => this.juegosService.getJuegoPorId(id)))
-      .subscribe((juego) => {
-        this.juego = juego;
-        this.juegosService
-          .getPlataformasdeJuegoporId(this.juego[0].IdJuego)
-          .subscribe((plataformasJuego) => {
-            this.plataformasJuego = plataformasJuego;
-            this.plataformasJuego.forEach((juego) => {
-              this.juegosService
-                .getPlataformaporId(juego.IdPlataforma)
-                .subscribe((plataformas) => {
-                  this.nuevaplataforma = {
-                    IdPlataforma: plataformas[0].IdPlataforma,
-                    NombrePlataforma: plataformas[0].NombrePlataforma,
-                  };
-                  console.log('Plataforma a añadir: ', this.nuevaplataforma);
-                  console.log(
-                    'Si vale -1 no está en el array: ',
-                    this.plataformas.indexOf(this.nuevaplataforma)
-                  );
-
-                  if (this.plataformas.indexOf(this.nuevaplataforma) === -1) {
-                    console.log('Añadiendo...');
-                    this.plataformas.push(this.nuevaplataforma);
-                    console.log(this.plataformas);
-                    console.log('Añadido!');
-                  }
-                  /* console.log(this.nuevaplataforma); */
-
-                  console.log(this.plataformas);
-                  /* this.plataformas = plataformas; */
-                  /* if (this.plataformas.length < this.plataformasJuego.length)
-                    this.plataformas.push(plataformas[0]); */
-                });
-            });
-          });
-      });
+    this.obtenerDatosdeJuegoporsuId();
   }
-  durationInSeconds = 2;
 
   openSnackBar() {
     this._snackBar.openFromComponent(JuegoencestaComponent, {
       duration: this.durationInSeconds * 1000,
+    });
+  }
+  //Recibiendo desde la URL la iddeJuego, llama al servicio y recupera todos sus datos
+  obtenerDatosdeJuegoporsuId() {
+    this.activatedRoute.params
+      .pipe(switchMap(({ id }) => this.juegosService.getJuegoPorId(id)))
+      .subscribe((juego) => {
+        this.juego = juego;
+        this.obtenerPlataformasdeunJuegoporIdJuego(this.juego[0].IdJuego);
+      });
+  }
+  //Recibiendo como parámetro la iddeJuego, llama al servicio y recupera las plataformas para las
+  // que dicho juego está disponible
+  obtenerPlataformasdeunJuegoporIdJuego(iddeJuego: number) {
+    this.juegosService
+      .getPlataformasdeJuegoporId(iddeJuego)
+      .subscribe((plataformasJuego) => {
+        this.plataformasJuego = plataformasJuego;
+        this.obtenerListadePlataformasdeJuego(this.plataformasJuego);
+      });
+  }
+  //Recibiendo como parámetro el array de pares de un juego y sus plataformas, llama al servicio
+  //por cada una y recupera los datos de las plataformas para dicho juego.
+  obtenerListadePlataformasdeJuego(plataformasJuego: JuegosPlataforma[]) {
+    plataformasJuego.forEach((parjuegoplataforma) => {
+      this.juegosService
+        .getPlataformaporId(parjuegoplataforma.IdPlataforma)
+        .subscribe((plataformas) => {
+          this.nuevaplataforma = {
+            IdPlataforma: plataformas[0].IdPlataforma,
+            NombrePlataforma: plataformas[0].NombrePlataforma,
+          };
+          if (this.plataformas.indexOf(this.nuevaplataforma) === -1) {
+            this.plataformas.push(this.nuevaplataforma);
+          }
+        });
     });
   }
 }

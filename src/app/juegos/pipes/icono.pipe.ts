@@ -20,8 +20,8 @@ export class IconoPipe implements PipeTransform {
       case 'Nintendo Switch':
         cadena = 'icon-swt.svg';
         break;
-      case 'XBox Series X':
-        cadena = 'icon-seriesx.png';
+      case 'XBox Series X/S':
+        cadena = 'icon-seriesx-s.svg';
         break;
       case 'XBox Series S':
         cadena = 'icon-seriess.png';

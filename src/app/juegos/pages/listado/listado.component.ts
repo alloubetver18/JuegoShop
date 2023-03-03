@@ -1,13 +1,8 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import {
-  JuegoShort,
-  Plataforma,
-  JuegosPlataforma,
-} from '../../interfaces/juegos.interfaces';
+import { Component, OnInit } from '@angular/core';
+import { JuegoShort, Plataforma } from '../../interfaces/juegos.interfaces';
 import { FormBuilder } from '@angular/forms';
 import { JuegosService } from '../../services/juegos.service';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { pairwise, scan, switchMap, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-listado',
@@ -33,12 +28,6 @@ export class ListadoComponent implements OnInit {
   precio = 10;
   jugadores = 1;
 
-  /* toppings = this._formBuilder.group({
-    pepperoni: false,
-    extracheese: false,
-    mushroom: false,
-  }); */
-
   constructor(
     private _formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -48,19 +37,10 @@ export class ListadoComponent implements OnInit {
 
   ngOnInit(): void {
     //TODO: Obteniendo el identificador parcial de la plataforma de la URL, usarlo para obtener
-    //todas las plataformas con nombre similar
-    this.activatedRoute.params.subscribe(({ id }) => {
-      this.idPlatafoma = id;
-      this.buscar();
-      this.reiniciar();
-    });
-
-    //TODO: Una vez tengas la lista de plataformas, usar cada una de ellas para obtener todos
-    //los ids de los juegos de las plataformas pertinentes
-    //TODO: Con la lista de los ids, usarla para obtener un array con las versiones Short de
-    //todos los juegos de dicha lista de ids
+    //todas las plataformas con nombre similar.
+    this.obtenerDescriptordePlataformadeRuta();
   }
-
+  //Limpiamos todos los datos sobrantes tras terminar las búsquedas.
   reiniciar() {
     this.listaJuegos = [];
     this.listaPlataformas = [];
@@ -72,62 +52,101 @@ export class ListadoComponent implements OnInit {
     this.juegolista = 0;
   }
 
-  buscar() {
-    //Llama el servicio y devuelve un array con todas las plataformas.
-    let idjuegosplat = new Array<number>();
+  //Obtiene la id de la plataforma a partir del parámetro recibido en el navegador
+  obtenerDescriptordePlataformadeRuta() {
+    this.activatedRoute.params.subscribe(({ id }) => {
+      this.idPlatafoma = id;
+      this.obtenerListadePlataformasporelDescriptordePlataforma(
+        this.idPlatafoma
+      );
+      this.reiniciar();
+    });
+  }
 
+  //Recibiendo un identificador de plataforma, devuelve todas las plataformas que
+  //coincidan total o parcialmente con dicha id (TODO: Cambiar por buscar la única que
+  //recibe, ya que el modal aún no está creado).
+  obtenerListadePlataformasporelDescriptordePlataforma(
+    descriptorPlataforma: string
+  ) {
     this.juegosService
-      .getPlataformasporDescriptor(this.idPlatafoma)
+      .getPlataformasporDescriptor(descriptorPlataforma)
       .subscribe((plataformas) => {
         this.listaPlataformas = plataformas;
         if (this.listaPlataformas.length == 0) {
           this.router.navigate(['/']);
+        } else {
+          this.obtenerListaIdsJuegosporListadePlataformas(
+            this.listaPlataformas
+          );
         }
-
-        //Toma la lista de plataformas y busca todos los juegos que pertenecen a ellas,
-        //sin repetirlos
-        this.listaPlataformas.forEach(async (element) => {
-          //obtener juegos por plataforma
-          this.juegosService
-            .getJuegosporPlataformas(element.IdPlataforma)
-            .subscribe((juegos) => {
-              juegos.forEach((element) => {
-                if (!idjuegosplat.includes(element.IdJuego)) {
-                  idjuegosplat.push(element.IdJuego);
-                  this.listaPrecios.push(element.Precio);
-                }
-              });
-              const valoresRepetidos: number[] = [];
-              idjuegosplat.forEach((value) => {
-                if (this.listaidjuegos.includes(value)) {
-                  valoresRepetidos.push(value);
-                }
-              });
-              idjuegosplat = idjuegosplat.filter(
-                (value) => !valoresRepetidos.includes(value)
-              );
-
-              if (this.listaidjuegos.length > 0) {
-                this.listaidjuegos = this.listaidjuegos.concat(idjuegosplat);
-              } else {
-                this.listaidjuegos = JSON.parse(JSON.stringify(idjuegosplat));
-              }
-
-              let juegonuevo: JuegoShort;
-              for (let i = 0; i < idjuegosplat.length; i++) {
-                this.juegosService
-                  .getJuegoPorId(idjuegosplat[i])
-                  .subscribe((juego) => {
-                    juegonuevo = {
-                      IdJuego: juego[0].IdJuego,
-                      NombreJuego: juego[0].NombreJuego,
-                      Precio: this.listaPrecios[this.posprecio],
-                    };
-                    this.listaJuegos.push(juegonuevo);
-                  });
-              }
-            });
-        });
+        this.reiniciar();
       });
+  }
+
+  //Recibiendo una lista de plataformas (TODO: cambiar a 'recibiendo una id de plataforma'),
+  //devuelve todos los ids de juegos que pertenezcan a dicha plataforma, sin mostrarlos duplicados.
+  //NOTA: Por lo general, estará mal: si está para un conjunto de plataformas, cada juego de
+  //cada plataforma debería identificarlo de forma única. Por ello, una búsqueda por una sola
+  //plataforma es preferible. Modificar cuando tenga el Modal.
+  obtenerListaIdsJuegosporListadePlataformas(listaPlataformas: Plataforma[]) {
+    let listaidjuegosplataforma = new Array<number>();
+    listaPlataformas.forEach((element) => {
+      //obtener juegos por plataforma
+
+      this.juegosService
+        .getJuegosporPlataformas(element.IdPlataforma)
+        .subscribe((juegos) => {
+          juegos.forEach((element) => {
+            if (!listaidjuegosplataforma.includes(element.IdJuego)) {
+              listaidjuegosplataforma.push(element.IdJuego);
+              this.listaPrecios.push(element.Precio);
+            }
+          });
+          const valoresRepetidos: number[] = [];
+          listaidjuegosplataforma.forEach((value) => {
+            if (this.listaidjuegos.includes(value)) {
+              valoresRepetidos.push(value);
+            }
+          });
+          listaidjuegosplataforma = listaidjuegosplataforma.filter(
+            (value) => !valoresRepetidos.includes(value)
+          );
+
+          if (this.listaidjuegos.length > 0) {
+            this.listaidjuegos = this.listaidjuegos.concat(
+              listaidjuegosplataforma
+            );
+          } else {
+            this.listaidjuegos = JSON.parse(
+              JSON.stringify(listaidjuegosplataforma)
+            );
+          }
+          this.obtenerListadeJuegosporListaIdsJuegos(
+            listaidjuegosplataforma,
+            this.listaPrecios
+          );
+          listaidjuegosplataforma = [];
+        });
+    });
+  }
+
+  //Recibiendo una lista de ids de juegos (number[]), devuelve los datos de cada juego (JuegoShort)
+  //y los guarda en una lista de juegos (JuegoShort[]).
+  obtenerListadeJuegosporListaIdsJuegos(
+    listaIdsJuegos: number[],
+    listaPrecios: number[]
+  ) {
+    let juegonuevo: JuegoShort;
+    for (let i = 0; i < listaIdsJuegos.length; i++) {
+      this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
+        juegonuevo = {
+          IdJuego: juego[0].IdJuego,
+          NombreJuego: juego[0].NombreJuego,
+          Precio: listaPrecios[i],
+        };
+        this.listaJuegos.push(juegonuevo);
+      });
+    }
   }
 }
