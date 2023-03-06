@@ -8,6 +8,7 @@ import {
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Usuario } from '../../auth/interfaces/usuarios.interfaces';
 import { ModalErrorUserComponent } from '../modal-error-user/modal-error-user.component';
+import { ModalRecuperarPassComponent } from '../modal-recuperar-pass/modal-recuperar-pass.component';
 
 @Component({
   selector: 'app-modal-login',
@@ -71,6 +72,15 @@ export class ModalLoginComponent {
   mostrarMensajeError() {
     let dialogRefError = this.dialog.open(ModalErrorUserComponent, {
       disableClose: true,
+    });
+  }
+
+  //Muestra un modal con una caja de texto que pedirá un email válido. Luego, cuando lo reciba,
+  //buscará en la BD si existe un usuario registrado con dicho Email. De existir, mandará un
+  //Email al usuario correspondiente para que le recuerde su contraseña almacenada.
+  recuperarContrasenia() {
+    let dialogRefError = this.dialog.open(ModalRecuperarPassComponent, {
+      disableClose: false,
     });
   }
 }

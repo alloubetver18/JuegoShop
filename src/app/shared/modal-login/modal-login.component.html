@@ -54,10 +54,12 @@
           <a href="" mat-dialog-close [routerLink]="['/auth/registro']"
             >Registrate aquí.</a
           >
+          <br />
         </td>
       </tr>
     </table>
     <div mat-dialog-actions>
+      <a mat-button (click)="recuperarContrasenia()"> Recuperar contraseña </a>
       <button type="submit" mat-button>Entrar</button>
       <button mat-button mat-dialog-close>Salir</button>
     </div>

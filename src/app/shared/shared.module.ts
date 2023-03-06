@@ -11,6 +11,7 @@ import { MaterialModule } from '../material/material.module';
 import { ModalLoginComponent } from './modal-login/modal-login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModalErrorUserComponent } from './modal-error-user/modal-error-user.component';
+import { ModalRecuperarPassComponent } from './modal-recuperar-pass/modal-recuperar-pass.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ModalErrorUserComponent } from './modal-error-user/modal-error-user.com
     ModalComponent,
     ModalLoginComponent,
     ModalErrorUserComponent,
+    ModalRecuperarPassComponent,
   ],
   imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule],
   exports: [CabeceraComponent, MenuComponent, PieComponent],

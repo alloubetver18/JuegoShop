@@ -23,4 +23,10 @@ export class AuthService {
       `${this.baseURL}/Usuarios?Nombre=${nombreUsuario}&Pass=${password}`
     );
   }
+
+  //TODO getDatosUsuarioporEmail: Pasando como parámetro un email válido, devuelve un
+  //observable de tipo array de usuario con sus datos, o un array vacio
+  getDatosUsuarioporEmail(email: string): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.baseURL}/Usuarios?Email=${email}`);
+  }
 }

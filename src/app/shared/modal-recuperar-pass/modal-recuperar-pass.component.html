@@ -1,0 +1,32 @@
+<div mat-dialog-content class="contenido">
+  <span>Recuperar tu contraseña.</span>
+  <br />
+  <span>Introduce tu email:</span>
+  <br />
+  <form
+    class="example-form"
+    (ngSubmit)="buscarEmail()"
+    autocomplete="off"
+    [formGroup]="miFormulario"
+  >
+    <table class="example-full-width" cellspacing="0">
+      <tr>
+        <td>
+          <mat-form-field class="example-full-width">
+            <mat-label>Email</mat-label>
+            <input
+              type="email"
+              matInput
+              class="form-control"
+              formControlName="email"
+            />
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+    <div mat-dialog-actions>
+      <button type="submit" mat-button>Enviar</button>
+      <button mat-button mat-dialog-close>Volver</button>
+    </div>
+  </form>
+</div>
