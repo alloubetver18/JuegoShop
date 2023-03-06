@@ -34,6 +34,28 @@
           </mat-form-field>
         </td>
       </tr>
+      <tr>
+        <td>
+          <mat-checkbox
+            class="example-margin"
+            formControlName="recordarUsuario"
+            [(indeterminate)]="indeterminate"
+            [labelPosition]="labelPosition"
+            [disabled]="disabled"
+          >
+            Recordarme
+          </mat-checkbox>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <br />
+          <p>¿No tienes cuenta?</p>
+          <a href="" mat-dialog-close [routerLink]="['/auth/registro']"
+            >Registrate aquí.</a
+          >
+        </td>
+      </tr>
     </table>
     <div mat-dialog-actions>
       <button type="submit" mat-button>Entrar</button>
@@ -41,10 +63,3 @@
     </div>
   </form>
 </div>
-
-<!-- <div mat-dialog-content class="contenido">
-  <p>Error: Usuario no encontrado.</p>
-  <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cerrar</button>
-  </div>
-</div> -->

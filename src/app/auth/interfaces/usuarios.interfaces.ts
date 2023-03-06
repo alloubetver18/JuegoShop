@@ -3,5 +3,6 @@ export interface Usuario {
   Nombre: string;
   Email: string;
   Pass: string;
-  ImgPerfil: string;
+  ImgPerfil?: string;
+  Recordar?: boolean;
 }

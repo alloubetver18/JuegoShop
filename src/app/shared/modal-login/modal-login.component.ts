@@ -21,9 +21,13 @@ export class ModalLoginComponent {
   miFormulario: FormGroup = this.fb.group({
     usuario: [, []],
     pass: [, []],
+    recordarUsuario: [, []],
     /* usuario: [, [Validators.required, Validators.minLength(3)]],
     pass: [, [Validators.required, Validators.min(0)]], */
   });
+  indeterminate = false;
+  labelPosition: 'before' | 'after' = 'after';
+  disabled = false;
 
   constructor(
     public dialog: MatDialog,
@@ -60,6 +64,7 @@ export class ModalLoginComponent {
       Email: usuario.Email,
       Pass: usuario.Pass,
       ImgPerfil: usuario.ImgPerfil,
+      Recordar: this.miFormulario.controls['recordarUsuario'].value,
     };
   }
   //Muestra un modal con un mensaje de error.

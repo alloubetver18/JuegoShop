@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Usuario } from 'src/app/auth/interfaces/usuarios.interfaces';
 import { ModalLoginComponent } from '../modal-login/modal-login.component';
 import { ModalComponent } from '../modal/modal.component';
@@ -15,16 +16,20 @@ export class MenuComponent implements OnInit {
     Email: '',
     Pass: '',
     ImgPerfil: '',
+    Recordar: false,
   };
   usuarioEncontrado: Usuario[] = [];
   usuarioLogueado: boolean = false;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private router: Router) {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    if (localStorage.getItem('user') != null) {
+    if (
+      localStorage.getItem('user') != null ||
+      sessionStorage.getItem('user') != null
+    ) {
       this.usuarioLogueado = true;
     }
   }
@@ -42,13 +47,18 @@ export class MenuComponent implements OnInit {
       if (result) {
         this.usuarioVacio = result;
         this.usuarioLogueado = true;
-        localStorage.setItem('user', this.usuarioVacio.idUsuario + '');
+        if (result.Recordar)
+          localStorage.setItem('user', this.usuarioVacio.idUsuario + '');
+        else sessionStorage.setItem('user', this.usuarioVacio.idUsuario + '');
+        this.router.navigate(['/']);
       }
     });
   }
 
   SalirSistema() {
     this.usuarioLogueado = false;
-    localStorage.removeItem('user');
+    if (localStorage.getItem('user') != null) localStorage.removeItem('user');
+    if (sessionStorage.getItem('user') != null)
+      sessionStorage.removeItem('user');
   }
 }
