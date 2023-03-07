@@ -1,9 +1,45 @@
-<h1 mat-dialog-title>Error: Usuario o contraseña invalidos</h1>
-<div mat-dialog-content class="contenido">
-  El usuario y/o contraseña introducidos no son válidos. Por favor, introduzca
-  unas credenciales válidas.
+<div class="mensajeError" *ngIf="errorLogin">
+  <h1 mat-dialog-title>Error: Usuario o contraseña invalidos</h1>
+  <div mat-dialog-content class="contenido">
+    El usuario y/o contraseña introducidos no son válidos. Por favor, introduzca
+    unas credenciales válidas.
+  </div>
+  <br />
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
 </div>
-<br />
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Close</button>
+
+<div class="mensajeError" *ngIf="errorEmail">
+  <h1 mat-dialog-title>Error: El Email no existe en el sistema</h1>
+  <div mat-dialog-content class="contenido">
+    El email introducido no coincide con ninguno de los existentes en nuestro
+    sistema. Por favor, verifique que ha sido introducido correctamente.
+  </div>
+  <br />
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
+</div>
+
+<div class="mensajeError" *ngIf="emailEncontrado">
+  <h1 mat-dialog-title>Email encontrado en el sistema.</h1>
+  <div mat-dialog-content class="contenido">
+    {{ mensajeRecibido }}
+  </div>
+  <br />
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
+</div>
+
+<div class="mensajeError" *ngIf="nuevoUsuario">
+  <h1 mat-dialog-title>Nueva cuenta de usuario creada</h1>
+  <div mat-dialog-content class="contenido">
+    Bienvenido a JuegoShop. Ya puede identificarse en nuestro sistema.
+  </div>
+  <br />
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
 </div>

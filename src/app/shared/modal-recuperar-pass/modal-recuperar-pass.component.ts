@@ -5,6 +5,11 @@ import { Usuario } from 'src/app/auth/interfaces/usuarios.interfaces';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ModalErrorUserComponent } from '../modal-error-user/modal-error-user.component';
 
+interface datos {
+  tipo: string;
+  mensaje?: string;
+}
+
 @Component({
   selector: 'app-modal-recuperar-pass',
   templateUrl: './modal-recuperar-pass.component.html',
@@ -12,6 +17,7 @@ import { ModalErrorUserComponent } from '../modal-error-user/modal-error-user.co
 })
 export class ModalRecuperarPassComponent {
   email: string = '';
+  tipoError: string = 'email';
   miFormulario: FormGroup = this.fb.group({
     email: [, []],
     /* usuario: [, [Validators.required, Validators.minLength(3)]],
@@ -39,9 +45,11 @@ export class ModalRecuperarPassComponent {
       .getDatosUsuarioporEmail(this.email)
       .subscribe((usuario) => {
         if (usuario.length == 0) {
-          this.mostrarMensajeError();
+          this.mostrarMensajeError(this.tipoError);
         } else {
           this.enviarEmail(usuario[0]);
+          this.tipoError = 'emailEncontrado';
+          this.mostrarMensajeDatosEmail(this.tipoError);
           this.dialogRef.close();
         }
       });
@@ -59,9 +67,25 @@ export class ModalRecuperarPassComponent {
   }
 
   //Si no encontró el email, mostrar mensaje de error
-  mostrarMensajeError() {
+  mostrarMensajeError(tipoError: string) {
     let dialogRefError = this.dialog.open(ModalErrorUserComponent, {
       disableClose: true,
+      data: {
+        tipo: tipoError,
+        mensaje: '',
+      },
+    });
+  }
+
+  //Cuando encuentra el email, muestra un modal con la información de ingreso.
+  //TODO Cambiar cuando sepa enviar emails con o sin servidor.
+  mostrarMensajeDatosEmail(tipoError: string) {
+    let dialogRefError = this.dialog.open(ModalErrorUserComponent, {
+      disableClose: true,
+      data: {
+        tipo: tipoError,
+        mensaje: this.mensajeRecuperacionContrasenia,
+      },
     });
   }
 }

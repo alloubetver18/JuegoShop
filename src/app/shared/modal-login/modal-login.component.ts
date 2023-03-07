@@ -19,6 +19,7 @@ export class ModalLoginComponent {
   usuario: string = '';
   pass: string = '';
   data!: Usuario;
+  tipoError: string = 'login';
   miFormulario: FormGroup = this.fb.group({
     usuario: [, []],
     pass: [, []],
@@ -48,7 +49,7 @@ export class ModalLoginComponent {
       .getUsuarioporNombreUsuarioyContraseniaUsuario(this.usuario, this.pass)
       .subscribe((usuario) => {
         if (usuario.length == 0) {
-          this.mostrarMensajeError();
+          this.mostrarMensajeError(this.tipoError);
         } else {
           this.guardarDatosUsuario(usuario[0]);
           this.dialogRef.close(this.data);
@@ -69,9 +70,13 @@ export class ModalLoginComponent {
     };
   }
   //Muestra un modal con un mensaje de error.
-  mostrarMensajeError() {
+  mostrarMensajeError(tipoError: string) {
     let dialogRefError = this.dialog.open(ModalErrorUserComponent, {
       disableClose: true,
+      data: {
+        tipo: tipoError,
+        mensaje: '',
+      },
     });
   }
 

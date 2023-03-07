@@ -19,7 +19,7 @@ export class JuegosService {
   //TODO Obtener de la base de datos un listado de juegos. A ser posible, solo los 12
   //más recientes
   getJuegos(): Observable<Juego[]> {
-    return this.http.get<Juego[]>(`${this.baseURL}/Juegos`);
+    return this.http.get<Juego[]>(`${this.baseURL}/Juegos?_limit=12`);
   }
 
   //Obtener juego por su id
@@ -33,7 +33,22 @@ export class JuegosService {
 
   //TODO Obtener de la base de datos un listado con los últimos 12 lanzamientos de
   //cualquier plataforma
-  getJuegosRecientes() {}
+  //Sin recibir parámetros, tomará la fecha del sistema y devolverá el listado con los 12 juegos
+  //más recientes de la base de datos, ordenados por su fecha de lanzamiento
+  getJuegosRecientes(): Observable<Juego[]> {
+    const fechaActual = new Date();
+    const fechaFormateada =
+      fechaActual.getFullYear() +
+      '-' +
+      (fechaActual.getMonth() + 1) +
+      '-' +
+      fechaActual.getDate();
+    return this.http.get<Juego[]>(
+      `${this.baseURL}/Juegos?FechaLanzamiento_lte=${fechaFormateada}
+        &_sort=FechaLanzamiento&_order=asc&_limit=12`
+      /* ?_sort=FechaLanzamiento&_order=desc&FechaLanzamiento_lte=2023-03-07 */
+    );
+  }
 
   //TODO Obtener de la base de datos un listado con los 12 juegos más vendidos hasta
   //ahora
@@ -41,7 +56,22 @@ export class JuegosService {
 
   //TODO Obtener de la base de datos un listado con los próximos 12 lanzamientos de
   //cualquier plataforma
-  getJuegosProximos() {}
+  //Sin recibir parámetros, tomará la fecha del sistema y devolverá el listado con los 12 juegos
+  //más próximos a salir de la base de datos, ordenados por su fecha de lanzamiento, excluyendo los
+  //que salgan hoy (que irén en estrenos recientes)
+  getJuegosProximos(): Observable<Juego[]> {
+    const fechaActual = new Date();
+    const fechaFormateada =
+      fechaActual.getFullYear() +
+      '-' +
+      (fechaActual.getMonth() + 1) +
+      '-' +
+      fechaActual.getDate();
+    return this.http.get<Juego[]>(
+      `${this.baseURL}/Juegos?FechaLanzamiento_gte=${fechaFormateada}
+        &_sort=FechaLanzamiento&_order=asc&_limit=12&FechaLanzamiento_ne=${fechaFormateada}`
+    );
+  }
 
   //TODO Obtener todas las plataformas para las que existe un juego concreto
   getPlataformasdeJuegoporId(idJuego: number): Observable<JuegosPlataforma[]> {
