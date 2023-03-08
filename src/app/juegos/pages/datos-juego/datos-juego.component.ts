@@ -16,7 +16,18 @@ import { JuegosService } from '../../services/juegos.service';
   styleUrls: ['./datos-juego.component.css'],
 })
 export class DatosJuegoComponent {
-  juego!: Juego[];
+  juego: boolean = false;
+  juegoConsultado: Juego = {
+    IdJuego: 0,
+    NombreJuego: '',
+    GeneroJuego: '',
+    JugadoresMaximos: 0,
+    Descripcion: '',
+    Online: true,
+    FechaLanzamiento: '',
+    Imagen: '',
+    Precio: 0,
+  };
   plataformasJuego: JuegosPlataforma[] = [];
   plataformas: Plataforma[] = [];
   indiceplataforma: number = 0;
@@ -46,8 +57,20 @@ export class DatosJuegoComponent {
     this.activatedRoute.params
       .pipe(switchMap(({ id }) => this.juegosService.getJuegoPorId(id)))
       .subscribe((juego) => {
-        this.juego = juego;
-        this.obtenerPlataformasdeunJuegoporIdJuego(this.juego[0].IdJuego);
+        this.juegoConsultado = {
+          IdJuego: juego[0].IdJuego,
+          NombreJuego: juego[0].NombreJuego,
+          GeneroJuego: juego[0].GeneroJuego,
+          JugadoresMaximos: juego[0].JugadoresMaximos,
+          Descripcion: juego[0].Descripcion,
+          Online: juego[0].Online,
+          FechaLanzamiento: juego[0].FechaLanzamiento,
+          Imagen: juego[0].Imagen,
+        };
+        this.juego = true;
+        this.obtenerPlataformasdeunJuegoporIdJuego(
+          this.juegoConsultado.IdJuego
+        );
       });
   }
   //Recibiendo como parámetro la iddeJuego, llama al servicio y recupera las plataformas para las
@@ -57,6 +80,7 @@ export class DatosJuegoComponent {
       .getPlataformasdeJuegoporId(iddeJuego)
       .subscribe((plataformasJuego) => {
         this.plataformasJuego = plataformasJuego;
+        this.juegoConsultado.Precio = this.plataformasJuego[0].Precio;
         this.obtenerListadePlataformasdeJuego(this.plataformasJuego);
       });
   }

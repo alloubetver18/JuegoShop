@@ -31,7 +31,7 @@ export interface CodigosCesta {
 export interface JuegoShort {
   IdJuego: number;
   NombreJuego: string;
-  Precio: number;
+  Precio?: number;
   IdPlataforma?: string;
 }
 
@@ -44,7 +44,7 @@ export interface Juego {
   Online: boolean;
   FechaLanzamiento: string;
   Imagen: string;
-  precio?: number;
+  Precio?: number;
 }
 
 export interface JuegosPlataforma {

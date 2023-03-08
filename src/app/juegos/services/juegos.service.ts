@@ -23,30 +23,27 @@ export class JuegosService {
   }
 
   //Obtener juego por su id
-  /* getJuegoPorId(IdJuego: number): Observable<Juego> {
-    return this.http.get<Juego>(`${this.baseURL}/Juegos?IdJuego=${IdJuego}`);
-  } */
-
   getJuegoPorId(IdJuego: number): Observable<Juego[]> {
     return this.http.get<Juego[]>(`${this.baseURL}/Juegos?IdJuego=${IdJuego}`);
   }
 
-  //TODO Obtener de la base de datos un listado con los últimos 12 lanzamientos de
-  //cualquier plataforma
   //Sin recibir parámetros, tomará la fecha del sistema y devolverá el listado con los 12 juegos
   //más recientes de la base de datos, ordenados por su fecha de lanzamiento
   getJuegosRecientes(): Observable<Juego[]> {
     const fechaActual = new Date();
+    let month = fechaActual.getMonth() + 1;
+    let day = fechaActual.getDate();
+    let daystr = '';
+    let monthstr = '';
+    if (day < 10) daystr = '0';
+    daystr += day.toString();
+    if (month < 10) monthstr = '0';
+    monthstr += month.toString();
     const fechaFormateada =
-      fechaActual.getFullYear() +
-      '-' +
-      (fechaActual.getMonth() + 1) +
-      '-' +
-      fechaActual.getDate();
+      fechaActual.getFullYear() + '-' + monthstr + '-' + daystr;
     return this.http.get<Juego[]>(
       `${this.baseURL}/Juegos?FechaLanzamiento_lte=${fechaFormateada}
-        &_sort=FechaLanzamiento&_order=asc&_limit=12`
-      /* ?_sort=FechaLanzamiento&_order=desc&FechaLanzamiento_lte=2023-03-07 */
+        &_sort=FechaLanzamiento&_order=desc&_limit=12`
     );
   }
 
@@ -54,19 +51,21 @@ export class JuegosService {
   //ahora
   getJuegosMasVendidos() {}
 
-  //TODO Obtener de la base de datos un listado con los próximos 12 lanzamientos de
-  //cualquier plataforma
   //Sin recibir parámetros, tomará la fecha del sistema y devolverá el listado con los 12 juegos
   //más próximos a salir de la base de datos, ordenados por su fecha de lanzamiento, excluyendo los
   //que salgan hoy (que irén en estrenos recientes)
   getJuegosProximos(): Observable<Juego[]> {
     const fechaActual = new Date();
+    let month = fechaActual.getMonth() + 1;
+    let day = fechaActual.getDate();
+    let daystr = '';
+    let monthstr = '';
+    if (day < 10) daystr = '0';
+    daystr += day.toString();
+    if (month < 10) monthstr = '0';
+    monthstr += month.toString();
     const fechaFormateada =
-      fechaActual.getFullYear() +
-      '-' +
-      (fechaActual.getMonth() + 1) +
-      '-' +
-      fechaActual.getDate();
+      fechaActual.getFullYear() + '-' + monthstr + '-' + daystr;
     return this.http.get<Juego[]>(
       `${this.baseURL}/Juegos?FechaLanzamiento_gte=${fechaFormateada}
         &_sort=FechaLanzamiento&_order=asc&_limit=12&FechaLanzamiento_ne=${fechaFormateada}`

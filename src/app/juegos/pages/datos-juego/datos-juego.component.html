@@ -5,10 +5,10 @@
 <ng-template #divJuego>
   <section class="box">
     <section class="subbox">
-      <h1>{{ juego[0].NombreJuego }}</h1>
+      <h1>{{ juegoConsultado.NombreJuego }}</h1>
       <hr />
       <br />
-      <img [src]="juego[0].IdJuego | imagen" alt="" />
+      <img [src]="juegoConsultado.IdJuego | imagen" alt="" />
     </section>
     <section class="subbox">
       <h1>
@@ -23,14 +23,14 @@
           </span>
         </div>
       </h1>
-      <h3>Precio: {{ plataformasJuego[0].Precio }}</h3>
+      <h3>Precio: {{ juegoConsultado.Precio }}</h3>
       <button class="btn btn-primary" (click)="openSnackBar()">
         Añadir al carrito
       </button>
       <br />
       <hr />
       <p>
-        {{ juego[0].Descripcion }}
+        {{ juegoConsultado.Descripcion }}
       </p>
       <hr />
       <br />
