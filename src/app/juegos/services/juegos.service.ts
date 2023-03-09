@@ -27,6 +27,13 @@ export class JuegosService {
     return this.http.get<Juego[]>(`${this.baseURL}/Juegos?IdJuego=${IdJuego}`);
   }
 
+  //Obtener una lista de juegos por nombre o parte de un nombre
+  getJuegosPorNombre(Nombre: string): Observable<Juego[]> {
+    return this.http.get<Juego[]>(
+      `${this.baseURL}/Juegos?NombreJuego_like=${Nombre}`
+    );
+  }
+
   //Sin recibir parámetros, tomará la fecha del sistema y devolverá el listado con los 12 juegos
   //más recientes de la base de datos, ordenados por su fecha de lanzamiento
   getJuegosRecientes(): Observable<Juego[]> {

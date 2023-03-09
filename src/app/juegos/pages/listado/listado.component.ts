@@ -23,6 +23,8 @@ export class ListadoComponent implements OnInit {
   numjuego: number = 0;
   posprecio: number = 0;
   juegolista: number = 0;
+  filtroGeneros: string[] = [];
+  nombreJuegoBuscado: string = '';
 
   value = '';
   precio = 10;
@@ -38,8 +40,10 @@ export class ListadoComponent implements OnInit {
   ngOnInit(): void {
     //TODO: Obteniendo el identificador parcial de la plataforma de la URL, usarlo para obtener
     //todas las plataformas con nombre similar.
+    this.filtroGeneros = [];
     this.obtenerDescriptordePlataformadeRuta();
   }
+
   //Limpiamos todos los datos sobrantes tras terminar las búsquedas.
   reiniciar() {
     this.listaJuegos = [];
@@ -122,10 +126,22 @@ export class ListadoComponent implements OnInit {
               JSON.stringify(listaidjuegosplataforma)
             );
           }
-          this.obtenerListadeJuegosporListaIdsJuegos(
-            listaidjuegosplataforma,
-            this.listaPrecios
-          );
+          //Comprobamos que los filtros no influyen
+
+          if (this.filtroGeneros.length == 0) {
+            this.obtenerListadeJuegosporListaIdsJuegos(
+              listaidjuegosplataforma,
+              this.listaPrecios
+            );
+            listaidjuegosplataforma = [];
+          } else {
+            this.obtenerListadeJuegosporListaIdsJuegosyGenero(
+              listaidjuegosplataforma,
+              this.listaPrecios,
+              this.filtroGeneros
+            );
+            listaidjuegosplataforma = [];
+          }
           listaidjuegosplataforma = [];
         });
     });
@@ -146,6 +162,67 @@ export class ListadoComponent implements OnInit {
           Precio: listaPrecios[i],
         };
         this.listaJuegos.push(juegonuevo);
+      });
+    }
+  }
+
+  //Al cambiar los filtros, guardar el genero añadido.
+  guardarGenero(genero: string) {
+    if (this.filtroGeneros.indexOf(genero) != -1) {
+      //Si lo encuentra, lo borra
+      const resultado = this.filtroGeneros.filter(
+        (generoEliminar) => generoEliminar != genero
+      );
+      this.filtroGeneros = resultado;
+    } else {
+      this.filtroGeneros.push(genero);
+    }
+
+    console.log('Generos a buscar: ', this.filtroGeneros);
+    //Llamar a la consulta y cambiar los datos mostrados.
+    //Si no hay géneros establecidos, buscar de nuevo todos
+    this.obtenerDescriptordePlataformadeRuta();
+  }
+  //De entre todos los juegos de la plataforma seleccionada, mostrar solo aquellos que
+  //Sean del género correcto
+  obtenerListadeJuegosporListaIdsJuegosyGenero(
+    listaIdsJuegos: number[],
+    listaPrecios: number[],
+    listaGeneros: string[]
+  ) {
+    let juegonuevo: JuegoShort;
+    for (let i = 0; i < listaIdsJuegos.length; i++) {
+      this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
+        if (listaGeneros.indexOf(juego[0].GeneroJuego) != -1) {
+          juegonuevo = {
+            IdJuego: juego[0].IdJuego,
+            NombreJuego: juego[0].NombreJuego,
+            Precio: listaPrecios[i],
+          };
+          this.listaJuegos.push(juegonuevo);
+        }
+      });
+    }
+  }
+
+  //De entre todos los juegos de la plataforma seleccionada, mostrar solo aquellos que
+  //Coincidan parcialmente con el nombre del juego introducido.
+  obtenerListadoJuegosporListaIdsJuegosyNombre(
+    listaIdsJuegos: number[],
+    listaPrecios: number[],
+    nombreJuegoBuscado: string
+  ) {
+    let juegonuevo: JuegoShort;
+    for (let i = 0; i < listaIdsJuegos.length; i++) {
+      this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
+        if (true) {
+          juegonuevo = {
+            IdJuego: juego[0].IdJuego,
+            NombreJuego: juego[0].NombreJuego,
+            Precio: listaPrecios[i],
+          };
+          this.listaJuegos.push(juegonuevo);
+        }
       });
     }
   }

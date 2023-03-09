@@ -129,7 +129,11 @@ export class CarrouselJuegosComponent {
     this.marcaidCarrousel = this.idcarrousel;
     this.tagid = '#' + this.marcaidCarrousel;
 
-    switch (this.idcarrousel) {
+    this.llenarCarousel(this.idcarrousel);
+  }
+  //En función del carousel que queramos llenar, llamará a una función del servicio u otra
+  llenarCarousel(idcarrousel: string) {
+    switch (idcarrousel) {
       case 'vendidos':
         this.llenarCarouselVendidos();
         break;
@@ -141,100 +145,96 @@ export class CarrouselJuegosComponent {
     }
   }
 
-  //TODO Función que busque los juegos más vendido. Para ello, necesitará cruzar varias consultas:
+  //Función que busque los juegos más vendido. Para ello, necesitará cruzar varias consultas:
   //- Contar el número de ejemplares vendido en los últimos 30 dias
   //- Tomar los 12 que hayan sido los más vendidos por su Id
   //- Tomar la lista y buscar sus datos en la BD
   llenarCarouselVendidos() {
+    let juego: JuegoShort = {
+      IdJuego: 0,
+      NombreJuego: '',
+      Precio: 0,
+      IdPlataforma: 0,
+    };
     if (this.listajuegosshortp1.length == 0) {
       this.JuegosService.getJuegos().subscribe((juegos) => {
         for (let i = 0; i < 12; i++) {
-          this.juegoshort = {
-            IdJuego: juegos[i].IdJuego,
-            NombreJuego: juegos[i].NombreJuego,
-            Precio: 59.95,
-          };
-          this.obtenerPlataformasdeunJuegoporIdJuego(
-            this.juegoshort.IdJuego,
-            i
-          );
-          if (i >= 0 && i < 4) this.listajuegosshortp1.push(this.juegoshort);
-          if (i >= 4 && i < 8) this.listajuegosshortp2.push(this.juegoshort);
-          if (i >= 8 && i < 12) this.listajuegosshortp3.push(this.juegoshort);
+          juego = this.guardarDatosJuegoObtenido(juegos[i]);
+          this.obtenerPlataformasdeunJuegoporIdJuego(juego, i);
         }
       });
     }
   }
 
-  //TODO Función que busque los 12 juegos lanzados más recientemente a partir de la fecha del
+  //Función que busque los 12 juegos lanzados más recientemente a partir de la fecha del
   //Sistema. Para ello, buscaremos por la fecha de hoy hacia atras y recuperamos 12 juegos.
   //Luego, buscaremos los datos de dichos 12 juegos en su tabla y los cargaremos en el
   //carrousel
   llenarCarouselRecientes() {
+    let juego: JuegoShort = {
+      IdJuego: 0,
+      NombreJuego: '',
+      Precio: 0,
+      IdPlataforma: 0,
+    };
     if (this.listajuegosshortp1.length == 0) {
       this.JuegosService.getJuegosRecientes().subscribe((juegos) => {
         for (let i = 0; i < 12; i++) {
-          this.juegoshort = {
-            IdJuego: juegos[i].IdJuego,
-            NombreJuego: juegos[i].NombreJuego,
-            Precio: 59.95,
-          };
-          debugger;
-          this.obtenerPlataformasdeunJuegoporIdJuego(
-            this.juegoshort.IdJuego,
-            i
-          );
-          if (i >= 0 && i < 4) this.listajuegosshortp1.push(this.juegoshort);
-          if (i >= 4 && i < 8) this.listajuegosshortp2.push(this.juegoshort);
-          if (i >= 8 && i < 12) this.listajuegosshortp3.push(this.juegoshort);
+          juego = this.guardarDatosJuegoObtenido(juegos[i]);
+          this.obtenerPlataformasdeunJuegoporIdJuego(juego, i);
         }
       });
     }
   }
-  //TODO Función que busque los 12 juegos que saldrán próximamente a partir de la fecha del
+  //Función que busque los 12 juegos que saldrán próximamente a partir de la fecha del
   //Sistema. Para ello, buscaremos por la fecha de hoy hacia delante y recuperamos 12 juegos.
   //Luego, buscaremos los datos de dichos 12 juegos en su tabla y los cargaremos en el
   //carrousel
   llenarCarouselProximos() {
+    let juego: JuegoShort = {
+      IdJuego: 0,
+      NombreJuego: '',
+      Precio: 0,
+      IdPlataforma: 0,
+    };
     if (this.listajuegosshortp1.length == 0) {
       this.JuegosService.getJuegosProximos().subscribe((juegos) => {
         for (let i = 0; i < 12; i++) {
-          this.juegoshort = {
-            IdJuego: juegos[i].IdJuego,
-            NombreJuego: juegos[i].NombreJuego,
-            Precio: 59.95,
-          };
-          this.obtenerPlataformasdeunJuegoporIdJuego(
-            this.juegoshort.IdJuego,
-            i
-          );
-          if (i >= 0 && i < 4) this.listajuegosshortp1.push(this.juegoshort);
-          if (i >= 4 && i < 8) this.listajuegosshortp2.push(this.juegoshort);
-          if (i >= 8 && i < 12) this.listajuegosshortp3.push(this.juegoshort);
+          juego = this.guardarDatosJuegoObtenido(juegos[i]);
+          this.obtenerPlataformasdeunJuegoporIdJuego(juego, i);
         }
       });
     }
+  }
+
+  //Tomamos los datos del juego obtenido de la BD y guardamos solo los datos que nos interesan.
+  guardarDatosJuegoObtenido(juego: Juego): JuegoShort {
+    let juegoObtenido: JuegoShort = {
+      IdJuego: juego.IdJuego,
+      NombreJuego: juego.NombreJuego,
+      Precio: 0,
+      IdPlataforma: 0,
+    };
+    return juegoObtenido;
   }
 
   //Obteniendo la id de un juego, obtendremos su precio de la lista de plataformas
   //Recibiendo como parámetro la iddeJuego, llama al servicio y recupera las plataformas para las
   // que dicho juego está disponible
-  obtenerPlataformasdeunJuegoporIdJuego(iddeJuego: number, indice: number) {
-    debugger;
-    this.JuegosService.getPlataformasdeJuegoporId(iddeJuego).subscribe(
+  obtenerPlataformasdeunJuegoporIdJuego(juego: JuegoShort, indice: number) {
+    this.JuegosService.getPlataformasdeJuegoporId(juego.IdJuego).subscribe(
       (plataformasJuego) => {
-        this.juegoshort.Precio = plataformasJuego[0].Precio;
-        /* console.log('Precio guardado: ', this.juegoshort.Precio);
-        console.log('Id del juego: ', this.juegoshort.IdJuego); */
-        /* this.guardarDatosCarrousel(indice); */
+        juego.Precio = plataformasJuego[0].Precio;
+        juego.IdPlataforma = plataformasJuego[0].IdPlataforma;
+        this.guardarDatosCarrousel(juego, indice);
       }
     );
   }
 
   //Guardar datos en el carrousel
-  guardarDatosCarrousel(i: number) {
-    if (i >= 0 && i < 4) this.listajuegosshortp1.push(this.juegoshort);
-    if (i >= 4 && i < 8) this.listajuegosshortp2.push(this.juegoshort);
-    if (i >= 8 && i < 12) this.listajuegosshortp3.push(this.juegoshort);
+  guardarDatosCarrousel(juego: JuegoShort, i: number) {
+    if (i >= 0 && i < 4) this.listajuegosshortp1.push(juego);
+    if (i >= 4 && i < 8) this.listajuegosshortp2.push(juego);
+    if (i >= 8 && i < 12) this.listajuegosshortp3.push(juego);
   }
 }

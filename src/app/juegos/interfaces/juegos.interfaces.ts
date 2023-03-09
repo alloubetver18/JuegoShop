@@ -32,7 +32,7 @@ export interface JuegoShort {
   IdJuego: number;
   NombreJuego: string;
   Precio?: number;
-  IdPlataforma?: string;
+  IdPlataforma?: number;
 }
 
 export interface Juego {

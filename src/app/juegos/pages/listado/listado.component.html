@@ -22,11 +22,21 @@
     <div class="example-label-container">
       <label class="example-name-label">Género: </label>
       <section class="example-section">
-        <p><mat-checkbox>RPG</mat-checkbox></p>
-        <p><mat-checkbox>Plataformas</mat-checkbox></p>
-        <p><mat-checkbox>Accion</mat-checkbox></p>
-        <p><mat-checkbox>Terror</mat-checkbox></p>
-        <p><mat-checkbox>JRPG</mat-checkbox></p>
+        <p><mat-checkbox (change)="guardarGenero('RPG')">RPG</mat-checkbox></p>
+        <p>
+          <mat-checkbox (change)="guardarGenero('Plataformas')"
+            >Plataformas</mat-checkbox
+          >
+        </p>
+        <p>
+          <mat-checkbox (change)="guardarGenero('Accion')">Accion</mat-checkbox>
+        </p>
+        <p>
+          <mat-checkbox (change)="guardarGenero('Terror')">Terror</mat-checkbox>
+        </p>
+        <p>
+          <mat-checkbox (change)="guardarGenero('JRPG')">JRPG</mat-checkbox>
+        </p>
       </section>
     </div>
     <div class="example-label-container">
