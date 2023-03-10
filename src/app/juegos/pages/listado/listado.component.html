@@ -22,7 +22,11 @@
     <div class="example-label-container">
       <label class="example-name-label">Género: </label>
       <section class="example-section">
-        <p><mat-checkbox (change)="guardarGenero('RPG')">RPG</mat-checkbox></p>
+        <p>
+          <mat-checkbox (change)="guardarGenero('RPG')" [(ngModel)]="checked"
+            >RPG</mat-checkbox
+          >
+        </p>
         <p>
           <mat-checkbox (change)="guardarGenero('Plataformas')"
             >Plataformas</mat-checkbox

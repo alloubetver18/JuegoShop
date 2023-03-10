@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { JuegoShort, Plataforma } from '../../interfaces/juegos.interfaces';
+import {
+  Juego,
+  JuegoShort,
+  Plataforma,
+} from '../../interfaces/juegos.interfaces';
 import { FormBuilder } from '@angular/forms';
 import { JuegosService } from '../../services/juegos.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +29,8 @@ export class ListadoComponent implements OnInit {
   juegolista: number = 0;
   filtroGeneros: string[] = [];
   nombreJuegoBuscado: string = '';
+  juegosEncontrados: Juego[] = [];
+  checked = false;
 
   value = '';
   precio = 10;
@@ -126,6 +132,13 @@ export class ListadoComponent implements OnInit {
               JSON.stringify(listaidjuegosplataforma)
             );
           }
+
+          /* this.obtenerListadeJuegosporListaIdsJuegos(
+            listaidjuegosplataforma,
+            this.listaPrecios
+          );
+          listaidjuegosplataforma = []; */
+
           //Comprobamos que los filtros no influyen
 
           if (this.filtroGeneros.length == 0) {
@@ -142,7 +155,6 @@ export class ListadoComponent implements OnInit {
             );
             listaidjuegosplataforma = [];
           }
-          listaidjuegosplataforma = [];
         });
     });
   }
@@ -162,6 +174,7 @@ export class ListadoComponent implements OnInit {
           Precio: listaPrecios[i],
         };
         this.listaJuegos.push(juegonuevo);
+        this.juegosEncontrados.push(juego[0]);
       });
     }
   }
@@ -178,10 +191,14 @@ export class ListadoComponent implements OnInit {
       this.filtroGeneros.push(genero);
     }
 
-    console.log('Generos a buscar: ', this.filtroGeneros);
     //Llamar a la consulta y cambiar los datos mostrados.
     //Si no hay géneros establecidos, buscar de nuevo todos
     this.obtenerDescriptordePlataformadeRuta();
+    /* if (this.filtroGeneros.length > 0) this.buscarPorGenero();
+    else {
+      if (this.juegosEncontrados.length > 0) this.juegosEncontrados.length = 0;
+      this.obtenerDescriptordePlataformadeRuta();
+    } */
   }
   //De entre todos los juegos de la plataforma seleccionada, mostrar solo aquellos que
   //Sean del género correcto
@@ -200,6 +217,7 @@ export class ListadoComponent implements OnInit {
             Precio: listaPrecios[i],
           };
           this.listaJuegos.push(juegonuevo);
+          this.juegosEncontrados.push(juego[0]);
         }
       });
     }
@@ -224,6 +242,24 @@ export class ListadoComponent implements OnInit {
           this.listaJuegos.push(juegonuevo);
         }
       });
+    }
+  }
+
+  //Funcion de prueba para buscar por genero en un archivo local
+  buscarPorGenero() {
+    this.reiniciar();
+    for (let i = 0; i < this.juegosEncontrados.length; i++) {
+      if (
+        this.filtroGeneros.indexOf(this.juegosEncontrados[i].GeneroJuego) != -1
+      ) {
+        let juegonuevo: JuegoShort;
+        juegonuevo = {
+          IdJuego: this.juegosEncontrados[i].IdJuego,
+          NombreJuego: this.juegosEncontrados[i].NombreJuego,
+          Precio: this.listaPrecios[i],
+        };
+        this.listaJuegos.push(juegonuevo);
+      }
     }
   }
 }

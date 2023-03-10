@@ -63,7 +63,6 @@ export class ModalRecuperarPassComponent {
       '. Su contraseña es: ' +
       usuario.Pass +
       '.';
-    console.log(this.mensajeRecuperacionContrasenia);
   }
 
   //Si no encontró el email, mostrar mensaje de error
