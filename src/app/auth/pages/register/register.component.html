@@ -1,12 +1,22 @@
 <div class="container">
   <div class="formulario">
-    <form class="example-form tabla">
+    <form
+      class="example-form tabla"
+      [formGroup]="formularioRegistro"
+      (ngSubmit)="registrar()"
+    >
       <table class="example-full-width" cellspacing="0">
         <tr>
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Nombre</mat-label>
-              <input type="text" matInput />
+              <input
+                type="text"
+                matInput
+                name=""
+                formControlName="nombre"
+                placeholder="Nombre del Usuario"
+              />
             </mat-form-field>
           </td>
         </tr>
@@ -14,7 +24,13 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Email</mat-label>
-              <input type="email" matInput />
+              <input
+                type="email"
+                matInput
+                name=""
+                formControlName="email"
+                placeholder=" Email del Usuario"
+              />
             </mat-form-field>
           </td>
         </tr>
@@ -22,7 +38,13 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Contraseña</mat-label>
-              <input type="password" matInput />
+              <input
+                type="password"
+                matInput
+                name=""
+                formControlName="password"
+                placeholder="Contraseña"
+              />
             </mat-form-field>
           </td>
         </tr>
@@ -30,13 +52,21 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Repita la Contraseña</mat-label>
-              <input type="password" matInput />
+              <input
+                type="password"
+                matInput
+                name=""
+                formControlName="password2"
+                placeholder="Repetir la Contraseña"
+              />
             </mat-form-field>
           </td>
         </tr>
       </table>
 
-      <button type="submit" mat-button>Registrar</button>
+      <button type="submit" mat-button [disabled]="formularioRegistro.invalid">
+        Registrar
+      </button>
       <button type="reset" mat-button>Limpiar formulario.</button>
     </form>
   </div>

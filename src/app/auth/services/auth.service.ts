@@ -12,7 +12,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  //TODO getUsuarioporNombreUsuarioyContraseniaUsuario: Pasando como parámetros un nombre
+  //getUsuarioporNombreUsuarioyContraseniaUsuario: Pasando como parámetros un nombre
   //de usuario válido y una contrasenia, devuelve un observable de tipo array de usuario
   //con sus datos.
   getUsuarioporNombreUsuarioyContraseniaUsuario(
@@ -24,9 +24,22 @@ export class AuthService {
     );
   }
 
-  //TODO getDatosUsuarioporEmail: Pasando como parámetro un email válido, devuelve un
+  //getDatosUsuarioporEmail: Pasando como parámetro un email válido, devuelve un
   //observable de tipo array de usuario con sus datos, o un array vacio
   getDatosUsuarioporEmail(email: string): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.baseURL}/Usuarios?Email=${email}`);
+  }
+
+  //getDatosUsuarioporNombre: Pasando como parámetro un nombre válido, devuelve un
+  //observable de tipo array de usuario con sus datos, o un array vacio
+  getDatosUsuarioporNombre(nombre: string): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(
+      `${this.baseURL}/Usuarios?Nombre=${nombre}`
+    );
+  }
+
+  //setNuevoUsuario: Pasando como parámetro un objeto de tipo Usuario, lo guarda en la BD
+  agregarHeroe(usuario: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.baseURL}/Usuarios`, usuario);
   }
 }
