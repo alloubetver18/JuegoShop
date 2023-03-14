@@ -165,6 +165,7 @@ export class ListadoComponent implements OnInit {
     listaIdsJuegos: number[],
     listaPrecios: number[]
   ) {
+    this.juegosEncontrados = [];
     let juegonuevo: JuegoShort;
     for (let i = 0; i < listaIdsJuegos.length; i++) {
       this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
@@ -177,6 +178,7 @@ export class ListadoComponent implements OnInit {
         this.juegosEncontrados.push(juego[0]);
       });
     }
+    /* console.log(this.listaJuegos); */
   }
 
   //Al cambiar los filtros, guardar el genero añadido.
@@ -193,6 +195,7 @@ export class ListadoComponent implements OnInit {
 
     //Llamar a la consulta y cambiar los datos mostrados.
     //Si no hay géneros establecidos, buscar de nuevo todos
+    /* console.log(this.filtroGeneros); */
     this.obtenerDescriptordePlataformadeRuta();
     /* if (this.filtroGeneros.length > 0) this.buscarPorGenero();
     else {
@@ -207,6 +210,7 @@ export class ListadoComponent implements OnInit {
     listaPrecios: number[],
     listaGeneros: string[]
   ) {
+    this.juegosEncontrados = [];
     let juegonuevo: JuegoShort;
     for (let i = 0; i < listaIdsJuegos.length; i++) {
       this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
@@ -221,6 +225,7 @@ export class ListadoComponent implements OnInit {
         }
       });
     }
+    /* console.log(this.listaJuegos); */
   }
 
   //De entre todos los juegos de la plataforma seleccionada, mostrar solo aquellos que

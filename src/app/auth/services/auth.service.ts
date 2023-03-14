@@ -39,7 +39,14 @@ export class AuthService {
   }
 
   //setNuevoUsuario: Pasando como parámetro un objeto de tipo Usuario, lo guarda en la BD
-  agregarHeroe(usuario: Usuario): Observable<Usuario> {
+  setNuevoUsuario(usuario: Usuario): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.baseURL}/Usuarios`, usuario);
+  }
+
+  //getUsuarios: Obtiene todos los usuarios del sistema. Del último al primero, en ese orden
+  getUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(
+      `${this.baseURL}/Usuarios?_sort=id&_order=desc`
+    );
   }
 }

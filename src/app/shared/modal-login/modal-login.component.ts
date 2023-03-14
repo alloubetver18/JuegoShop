@@ -61,7 +61,7 @@ export class ModalLoginComponent {
   //llamada data.
   guardarDatosUsuario(usuario: Usuario) {
     this.data = {
-      idUsuario: usuario.idUsuario,
+      id: usuario.id,
       Nombre: usuario.Nombre,
       Email: usuario.Email,
       Pass: usuario.Pass,

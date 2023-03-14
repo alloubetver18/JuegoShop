@@ -11,7 +11,7 @@ import { ModalComponent } from '../modal/modal.component';
 })
 export class MenuComponent implements OnInit {
   usuarioVacio: Usuario = {
-    idUsuario: 0,
+    id: '',
     Nombre: '',
     Email: '',
     Pass: '',
@@ -48,8 +48,8 @@ export class MenuComponent implements OnInit {
         this.usuarioVacio = result;
         this.usuarioLogueado = true;
         if (result.Recordar)
-          localStorage.setItem('user', this.usuarioVacio.idUsuario + '');
-        else sessionStorage.setItem('user', this.usuarioVacio.idUsuario + '');
+          localStorage.setItem('user', this.usuarioVacio.id + '');
+        else sessionStorage.setItem('user', this.usuarioVacio.id + '');
         this.router.navigate(['/']);
       }
     });

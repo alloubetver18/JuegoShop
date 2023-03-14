@@ -18,6 +18,9 @@
                 placeholder="Nombre del Usuario"
               />
             </mat-form-field>
+            <span class="form-text text-danger" *ngIf="campoNoValido('nombre')"
+              >*El nombre del usuario es muy corto.</span
+            >
           </td>
         </tr>
         <tr>
@@ -32,6 +35,11 @@
                 placeholder=" Email del Usuario"
               />
             </mat-form-field>
+            <span
+              class="form-text text-danger"
+              *ngIf="campoNoValido('email')"
+              >{{ emailErrorsMsg }}</span
+            >
           </td>
         </tr>
         <tr>
@@ -46,6 +54,11 @@
                 placeholder="Contraseña"
               />
             </mat-form-field>
+            <span
+              class="form-text text-danger"
+              *ngIf="campoNoValido('password')"
+              >La contraseña debe ser mayor de 6 caracteres</span
+            >
           </td>
         </tr>
         <tr>
@@ -60,11 +73,16 @@
                 placeholder="Repetir la Contraseña"
               />
             </mat-form-field>
+            <span
+              class="form-text text-danger"
+              *ngIf="campoNoValido('password2')"
+              >Las 2 contraseñas deben ser identicas</span
+            >
           </td>
         </tr>
       </table>
 
-      <button type="submit" mat-button [disabled]="formularioRegistro.invalid">
+      <button type="submit" mat-button [disabled]="!formularioRegistro.valid">
         Registrar
       </button>
       <button type="reset" mat-button>Limpiar formulario.</button>
