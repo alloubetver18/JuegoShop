@@ -30,6 +30,7 @@ export class ListadoComponent implements OnInit {
   filtroGeneros: string[] = [];
   nombreJuegoBuscado: string = '';
   juegosEncontrados: Juego[] = [];
+  juegosporNombre: Juego[] = [];
   checked = false;
 
   value = '';
@@ -133,28 +134,11 @@ export class ListadoComponent implements OnInit {
             );
           }
 
-          /* this.obtenerListadeJuegosporListaIdsJuegos(
+          this.obtenerListadeJuegosporListaIdsJuegos(
             listaidjuegosplataforma,
             this.listaPrecios
           );
-          listaidjuegosplataforma = []; */
-
-          //Comprobamos que los filtros no influyen
-
-          if (this.filtroGeneros.length == 0) {
-            this.obtenerListadeJuegosporListaIdsJuegos(
-              listaidjuegosplataforma,
-              this.listaPrecios
-            );
-            listaidjuegosplataforma = [];
-          } else {
-            this.obtenerListadeJuegosporListaIdsJuegosyGenero(
-              listaidjuegosplataforma,
-              this.listaPrecios,
-              this.filtroGeneros
-            );
-            listaidjuegosplataforma = [];
-          }
+          listaidjuegosplataforma = [];
         });
     });
   }
@@ -169,16 +153,100 @@ export class ListadoComponent implements OnInit {
     let juegonuevo: JuegoShort;
     for (let i = 0; i < listaIdsJuegos.length; i++) {
       this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
+        this.juegosEncontrados.push(juego[0]);
+        if (i == listaIdsJuegos.length - 1)
+          this.mostrarJuegos(
+            this.juegosEncontrados,
+            this.filtroGeneros,
+            listaPrecios
+          );
+      });
+    }
+  }
+
+  //En base a una lista de juegos encontrados, una lista de precios y un filtro de géneros,
+  //mostraremos la lista de juegos por pantalla.
+  mostrarJuegos(
+    listaJuegosEncontrados: Juego[],
+    filtroDeGeneros: string[],
+    listaPrecios: number[]
+  ) {
+    let juegonuevo: JuegoShort;
+
+    //Si la longitud del texto de la caja de texto es mayor que 0, filtramos los nombres
+    /* if (this.value.length > 0) {
+      for (let i = 0; i < listaJuegosEncontrados.length; i++){
+        if (
+          listaJuegosEncontrados[i].NombreJuego.toLowerCase().includes(
+            this.value.toLowerCase()
+          )
+        ) {this.juegosporNombre.push(listaJuegosEncontrados[i]);}
+      }
+      if (filtroDeGeneros.length > 0){
+        for (let i = 0; i < this.juegosporNombre.length; i++){
+          if (
+            filtroDeGeneros.indexOf(this.juegosporNombre[i].GeneroJuego) != -1
+          ) {
+            juegonuevo = {
+              IdJuego: listaJuegosEncontrados[i].IdJuego,
+              NombreJuego: listaJuegosEncontrados[i].NombreJuego,
+              Precio: listaPrecios[i],
+            };
+            this.listaJuegos.push(juegonuevo);
+          }
+        }
+      }else{
+        for (let i = 0; i < this.juegosporNombre.length; i++){
+            juegonuevo = {
+              IdJuego: this.juegosporNombre[i].IdJuego,
+              NombreJuego: this.juegosporNombre[i].NombreJuego,
+              Precio: listaPrecios[i],
+            };
+            this.listaJuegos.push(juegonuevo);
+        }
+      }
+
+    } */
+
+    for (let i = 0; i < listaJuegosEncontrados.length; i++) {
+      if (this.value.length > 0) {
+        if (
+          listaJuegosEncontrados[i].NombreJuego.toLowerCase().includes(
+            this.value.toLowerCase()
+          )
+        ) {
+          this.juegosporNombre.push(listaJuegosEncontrados[i]);
+          /* juegonuevo = {
+            IdJuego: listaJuegosEncontrados[i].IdJuego,
+            NombreJuego: listaJuegosEncontrados[i].NombreJuego,
+            Precio: listaPrecios[i],
+          };
+          this.listaJuegos.push(juegonuevo); */
+        }
+      }
+      if (filtroDeGeneros.length > 0) {
+        if (
+          filtroDeGeneros.indexOf(listaJuegosEncontrados[i].GeneroJuego) != -1
+        ) {
+          juegonuevo = {
+            IdJuego: listaJuegosEncontrados[i].IdJuego,
+            NombreJuego: listaJuegosEncontrados[i].NombreJuego,
+            Precio: listaPrecios[i],
+          };
+          this.listaJuegos.push(juegonuevo);
+        }
+      } else {
         juegonuevo = {
-          IdJuego: juego[0].IdJuego,
-          NombreJuego: juego[0].NombreJuego,
+          IdJuego: listaJuegosEncontrados[i].IdJuego,
+          NombreJuego: listaJuegosEncontrados[i].NombreJuego,
           Precio: listaPrecios[i],
         };
         this.listaJuegos.push(juegonuevo);
-        this.juegosEncontrados.push(juego[0]);
-      });
+      }
     }
-    /* console.log(this.listaJuegos); */
+    /* console.log(this.juegosporNombre);
+    if (this.juegosporNombre.length > 0)
+      this.listaJuegos = this.juegosporNombre; */
   }
 
   //Al cambiar los filtros, guardar el genero añadido.
@@ -193,39 +261,24 @@ export class ListadoComponent implements OnInit {
       this.filtroGeneros.push(genero);
     }
 
+    this.listaJuegos = [];
+    this.mostrarJuegos(
+      this.juegosEncontrados,
+      this.filtroGeneros,
+      this.listaPrecios
+    );
     //Llamar a la consulta y cambiar los datos mostrados.
-    //Si no hay géneros establecidos, buscar de nuevo todos
-    /* console.log(this.filtroGeneros); */
-    this.obtenerDescriptordePlataformadeRuta();
-    /* if (this.filtroGeneros.length > 0) this.buscarPorGenero();
-    else {
-      if (this.juegosEncontrados.length > 0) this.juegosEncontrados.length = 0;
-      this.obtenerDescriptordePlataformadeRuta();
-    } */
+    /* this.obtenerDescriptordePlataformadeRuta(); */
   }
-  //De entre todos los juegos de la plataforma seleccionada, mostrar solo aquellos que
-  //Sean del género correcto
-  obtenerListadeJuegosporListaIdsJuegosyGenero(
-    listaIdsJuegos: number[],
-    listaPrecios: number[],
-    listaGeneros: string[]
-  ) {
-    this.juegosEncontrados = [];
-    let juegonuevo: JuegoShort;
-    for (let i = 0; i < listaIdsJuegos.length; i++) {
-      this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
-        if (listaGeneros.indexOf(juego[0].GeneroJuego) != -1) {
-          juegonuevo = {
-            IdJuego: juego[0].IdJuego,
-            NombreJuego: juego[0].NombreJuego,
-            Precio: listaPrecios[i],
-          };
-          this.listaJuegos.push(juegonuevo);
-          this.juegosEncontrados.push(juego[0]);
-        }
-      });
-    }
-    /* console.log(this.listaJuegos); */
+
+  buscarPorNombre() {
+    /* this.listaJuegos = [];
+    this.juegosporNombre = [];
+    this.mostrarJuegos(
+      this.juegosEncontrados,
+      this.filtroGeneros,
+      this.listaPrecios
+    ); */
   }
 
   //De entre todos los juegos de la plataforma seleccionada, mostrar solo aquellos que
@@ -247,24 +300,6 @@ export class ListadoComponent implements OnInit {
           this.listaJuegos.push(juegonuevo);
         }
       });
-    }
-  }
-
-  //Funcion de prueba para buscar por genero en un archivo local
-  buscarPorGenero() {
-    this.reiniciar();
-    for (let i = 0; i < this.juegosEncontrados.length; i++) {
-      if (
-        this.filtroGeneros.indexOf(this.juegosEncontrados[i].GeneroJuego) != -1
-      ) {
-        let juegonuevo: JuegoShort;
-        juegonuevo = {
-          IdJuego: this.juegosEncontrados[i].IdJuego,
-          NombreJuego: this.juegosEncontrados[i].NombreJuego,
-          Precio: this.listaPrecios[i],
-        };
-        this.listaJuegos.push(juegonuevo);
-      }
     }
   }
 }

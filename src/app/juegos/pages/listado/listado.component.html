@@ -43,19 +43,17 @@
         </p>
       </section>
     </div>
-    <div class="example-label-container">
-      <label class="example-name-label"
-        >Online:
-        <section class="example-section">
-          <p><mat-checkbox></mat-checkbox></p>
-        </section>
-      </label>
-    </div>
   </mat-drawer>
   <mat-drawer-content>
     <mat-form-field class="busqueda">
       <mat-label>Buscar Juego...</mat-label>
-      <input matInput type="text" [(ngModel)]="value" autocomplete="off" />
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="value"
+        (input)="buscarPorNombre()"
+        autocomplete="off"
+      />
       <button
         *ngIf="value"
         matSuffix
