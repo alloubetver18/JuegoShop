@@ -23,23 +23,31 @@
       <label class="example-name-label">Género: </label>
       <section class="example-section">
         <p>
-          <mat-checkbox (change)="guardarGenero('RPG')" [(ngModel)]="checked"
+          <mat-checkbox
+            (change)="filtrarporGeneroJuego('RPG')"
+            [(ngModel)]="checked"
             >RPG</mat-checkbox
           >
         </p>
         <p>
-          <mat-checkbox (change)="guardarGenero('Plataformas')"
+          <mat-checkbox (change)="filtrarporGeneroJuego('Plataformas')"
             >Plataformas</mat-checkbox
           >
         </p>
         <p>
-          <mat-checkbox (change)="guardarGenero('Accion')">Accion</mat-checkbox>
+          <mat-checkbox (change)="filtrarporGeneroJuego('Accion')"
+            >Accion</mat-checkbox
+          >
         </p>
         <p>
-          <mat-checkbox (change)="guardarGenero('Terror')">Terror</mat-checkbox>
+          <mat-checkbox (change)="filtrarporGeneroJuego('Terror')"
+            >Terror</mat-checkbox
+          >
         </p>
         <p>
-          <mat-checkbox (change)="guardarGenero('JRPG')">JRPG</mat-checkbox>
+          <mat-checkbox (change)="filtrarporGeneroJuego('JRPG')"
+            >JRPG</mat-checkbox
+          >
         </p>
       </section>
     </div>
@@ -51,9 +59,10 @@
         matInput
         type="text"
         [(ngModel)]="value"
-        (input)="buscarPorNombre()"
+        (input)="filtrarporNombreJuego()"
         autocomplete="off"
       />
+      <!-- <input matInput type="text" [(ngModel)]="value" autocomplete="off" /> -->
       <button
         *ngIf="value"
         matSuffix

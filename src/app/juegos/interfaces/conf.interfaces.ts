@@ -4,4 +4,5 @@ export enum RutasArchivo {
 
 export enum ExtensionArchivo {
   formatoPng = '.png',
+  formatoJpg = '.jpg',
 }

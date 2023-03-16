@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { JuegoShort } from '../interfaces/juegos.interfaces';
 
 @Pipe({
   name: 'icono',
@@ -31,6 +30,5 @@ export class IconoPipe implements PipeTransform {
         break;
     }
     return `assets/${cadena}`;
-    /* return 'assets/heroes/' + heroe.id + '.jpg'; */
   }
 }

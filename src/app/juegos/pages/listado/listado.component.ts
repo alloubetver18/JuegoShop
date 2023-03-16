@@ -31,6 +31,9 @@ export class ListadoComponent implements OnInit {
   nombreJuegoBuscado: string = '';
   juegosEncontrados: Juego[] = [];
   juegosporNombre: Juego[] = [];
+  preciosporNombre: number[] = [];
+  juegosporGenero: Juego[] = [];
+  preciosporGenero: number[] = [];
   checked = false;
 
   value = '';
@@ -150,12 +153,11 @@ export class ListadoComponent implements OnInit {
     listaPrecios: number[]
   ) {
     this.juegosEncontrados = [];
-    let juegonuevo: JuegoShort;
     for (let i = 0; i < listaIdsJuegos.length; i++) {
       this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
         this.juegosEncontrados.push(juego[0]);
         if (i == listaIdsJuegos.length - 1)
-          this.mostrarJuegos(
+          this.guardaryCargarJuegos(
             this.juegosEncontrados,
             this.filtroGeneros,
             listaPrecios
@@ -166,91 +168,81 @@ export class ListadoComponent implements OnInit {
 
   //En base a una lista de juegos encontrados, una lista de precios y un filtro de géneros,
   //mostraremos la lista de juegos por pantalla.
-  mostrarJuegos(
+  guardaryCargarJuegos(
     listaJuegosEncontrados: Juego[],
     filtroDeGeneros: string[],
     listaPrecios: number[]
   ) {
-    let juegonuevo: JuegoShort;
-
-    //Si la longitud del texto de la caja de texto es mayor que 0, filtramos los nombres
-    /* if (this.value.length > 0) {
-      for (let i = 0; i < listaJuegosEncontrados.length; i++){
-        if (
-          listaJuegosEncontrados[i].NombreJuego.toLowerCase().includes(
-            this.value.toLowerCase()
-          )
-        ) {this.juegosporNombre.push(listaJuegosEncontrados[i]);}
-      }
-      if (filtroDeGeneros.length > 0){
-        for (let i = 0; i < this.juegosporNombre.length; i++){
-          if (
-            filtroDeGeneros.indexOf(this.juegosporNombre[i].GeneroJuego) != -1
-          ) {
-            juegonuevo = {
-              IdJuego: listaJuegosEncontrados[i].IdJuego,
-              NombreJuego: listaJuegosEncontrados[i].NombreJuego,
-              Precio: listaPrecios[i],
-            };
-            this.listaJuegos.push(juegonuevo);
-          }
-        }
-      }else{
-        for (let i = 0; i < this.juegosporNombre.length; i++){
-            juegonuevo = {
-              IdJuego: this.juegosporNombre[i].IdJuego,
-              NombreJuego: this.juegosporNombre[i].NombreJuego,
-              Precio: listaPrecios[i],
-            };
-            this.listaJuegos.push(juegonuevo);
-        }
-      }
-
-    } */
-
-    for (let i = 0; i < listaJuegosEncontrados.length; i++) {
-      if (this.value.length > 0) {
-        if (
-          listaJuegosEncontrados[i].NombreJuego.toLowerCase().includes(
-            this.value.toLowerCase()
-          )
-        ) {
-          this.juegosporNombre.push(listaJuegosEncontrados[i]);
-          /* juegonuevo = {
-            IdJuego: listaJuegosEncontrados[i].IdJuego,
-            NombreJuego: listaJuegosEncontrados[i].NombreJuego,
-            Precio: listaPrecios[i],
-          };
-          this.listaJuegos.push(juegonuevo); */
-        }
-      }
-      if (filtroDeGeneros.length > 0) {
-        if (
-          filtroDeGeneros.indexOf(listaJuegosEncontrados[i].GeneroJuego) != -1
-        ) {
-          juegonuevo = {
-            IdJuego: listaJuegosEncontrados[i].IdJuego,
-            NombreJuego: listaJuegosEncontrados[i].NombreJuego,
-            Precio: listaPrecios[i],
-          };
-          this.listaJuegos.push(juegonuevo);
-        }
-      } else {
-        juegonuevo = {
-          IdJuego: listaJuegosEncontrados[i].IdJuego,
-          NombreJuego: listaJuegosEncontrados[i].NombreJuego,
-          Precio: listaPrecios[i],
-        };
-        this.listaJuegos.push(juegonuevo);
-      }
+    this.juegosporGenero = [];
+    this.preciosporGenero = [];
+    this.juegosporNombre = [];
+    this.preciosporNombre = [];
+    //Si la longitud del texto de la caja de texto es igual a 0 y la longitud del filtro de
+    //generos es 0, se muestran todos los datos.
+    if (this.value.length == 0 && filtroDeGeneros.length == 0) {
+      this.cargarListaJuegos(listaJuegosEncontrados, listaPrecios);
     }
-    /* console.log(this.juegosporNombre);
-    if (this.juegosporNombre.length > 0)
-      this.listaJuegos = this.juegosporNombre; */
+
+    //Si la longitud del texto de la caja de texto es mayor que 0, pero no hay ningún genero,
+    //filtramos los nombres llamando a la función nostrarJuegosporNombre
+    if (this.value.length > 0 && filtroDeGeneros.length == 0) {
+      this.guardarJuegosporNombre(listaJuegosEncontrados, listaPrecios);
+      this.cargarListaJuegos(this.juegosporNombre, this.preciosporNombre);
+    }
+
+    //Si, además, existe algún género seleccionado, llamamos a mostrarJuegosporGenero
+    //Y llenamos el array de listaJuegos
+    if (this.value.length > 0 && filtroDeGeneros.length > 0) {
+      this.guardarJuegosporNombre(listaJuegosEncontrados, listaPrecios);
+      this.guardarJuegosporGenero(this.juegosporNombre, this.preciosporNombre);
+      this.cargarListaJuegos(this.juegosporGenero, this.preciosporGenero);
+    }
+
+    //En el caso de que solo se cambie el género sin poner nombre, solo se llama a
+    //mostrarJuegosporGenero con todos los juegos encontrados.
+    if (this.value.length == 0 && filtroDeGeneros.length > 0) {
+      this.guardarJuegosporGenero(listaJuegosEncontrados, listaPrecios);
+      this.cargarListaJuegos(this.juegosporGenero, this.preciosporGenero);
+    }
   }
 
-  //Al cambiar los filtros, guardar el genero añadido.
-  guardarGenero(genero: string) {
+  //Se toma el nombre y se busca dentro del array de Juegos. Si hay una conicidencia
+  //total o parcial del nombre, se guarda en un array de juegos filtrador por nombre,
+  //mientras que el precio se guarda en un array específico para los precios.
+  guardarJuegosporNombre(
+    listaJuegosEncontrados: Juego[],
+    listaPrecios: number[]
+  ) {
+    for (let i = 0; i < listaJuegosEncontrados.length; i++) {
+      if (
+        listaJuegosEncontrados[i].NombreJuego.toLowerCase().includes(
+          this.value.toLowerCase()
+        )
+      ) {
+        this.juegosporNombre.push(listaJuegosEncontrados[i]);
+        this.preciosporNombre.push(listaPrecios[i]);
+      }
+    }
+  }
+  //Se toma, o bien el array con todos los juegos encontrados, o bien el array con los
+  //nombres filtrados, y se filtran los datos por Género. De la misma forma, se guarda en
+  //un array específico para juegos por género y precios por género.
+  guardarJuegosporGenero(
+    listaJuegosEncontrados: Juego[],
+    listaPrecios: number[]
+  ) {
+    for (let i = 0; i < listaJuegosEncontrados.length; i++) {
+      if (
+        this.filtroGeneros.indexOf(listaJuegosEncontrados[i].GeneroJuego) != -1
+      ) {
+        this.juegosporGenero.push(listaJuegosEncontrados[i]);
+        this.preciosporGenero.push(listaPrecios[i]);
+      }
+    }
+  }
+
+  //Al cambiar los filtros, guardar el genero añadido. Luego, empieza a filtrar por ellos.
+  filtrarporGeneroJuego(genero: string) {
     if (this.filtroGeneros.indexOf(genero) != -1) {
       //Si lo encuentra, lo borra
       const resultado = this.filtroGeneros.filter(
@@ -262,44 +254,44 @@ export class ListadoComponent implements OnInit {
     }
 
     this.listaJuegos = [];
-    this.mostrarJuegos(
+    this.guardaryCargarJuegos(
       this.juegosEncontrados,
       this.filtroGeneros,
       this.listaPrecios
     );
-    //Llamar a la consulta y cambiar los datos mostrados.
-    /* this.obtenerDescriptordePlataformadeRuta(); */
   }
 
-  buscarPorNombre() {
-    /* this.listaJuegos = [];
-    this.juegosporNombre = [];
-    this.mostrarJuegos(
+  //Al cambiar el nombre, vacía la lista de juegos en pantalla y empieza a filtrarla.
+  filtrarporNombreJuego() {
+    this.listaJuegos = [];
+    this.guardaryCargarJuegos(
       this.juegosEncontrados,
       this.filtroGeneros,
       this.listaPrecios
-    ); */
+    );
   }
 
-  //De entre todos los juegos de la plataforma seleccionada, mostrar solo aquellos que
-  //Coincidan parcialmente con el nombre del juego introducido.
-  obtenerListadoJuegosporListaIdsJuegosyNombre(
-    listaIdsJuegos: number[],
-    listaPrecios: number[],
-    nombreJuegoBuscado: string
-  ) {
+  //Al cambiar el numero de jugadores, vaciamos la lista de juegos en pantalla y filtramos
+  //por aquellos juegos que tengan, al menos, dicho numero de jugadores
+  //Por ejemplo, si el filtro indica 2 jugadores, mostrará aquellos que sean de 2 o más jugadores
+  filtrarporNumeroJugadoresJuego() {}
+
+  //Al cambiar el valor del precio, vaciamos la lista de juegos en pantalla y filtramos por
+  //aquellos juegos cuyo precio sea...
+  //o mayor que el número
+  //o menor que el número
+  filtrarporPrecioJuego() {}
+
+  //Pasando un array de Juegos y un array de numeros, cargamos la lista de los juegos en pantalla
+  cargarListaJuegos(listaJuegos: Juego[], listaPrecios: number[]) {
     let juegonuevo: JuegoShort;
-    for (let i = 0; i < listaIdsJuegos.length; i++) {
-      this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
-        if (true) {
-          juegonuevo = {
-            IdJuego: juego[0].IdJuego,
-            NombreJuego: juego[0].NombreJuego,
-            Precio: listaPrecios[i],
-          };
-          this.listaJuegos.push(juegonuevo);
-        }
-      });
+    for (let i = 0; i < listaJuegos.length; i++) {
+      juegonuevo = {
+        IdJuego: listaJuegos[i].IdJuego,
+        NombreJuego: listaJuegos[i].NombreJuego,
+        Precio: listaPrecios[i],
+      };
+      this.listaJuegos.push(juegonuevo);
     }
   }
 }
