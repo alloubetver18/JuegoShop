@@ -12,7 +12,6 @@ import { CarrouselComponent } from './pages/carrousel/carrousel.component';
 import { ImagenPipe } from './pipes/imagen.pipe';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
-import { JuegoencestaComponent } from './components/juegoencesta/juegoencesta.component';
 import { IconoPipe } from './pipes/icono.pipe';
 
 @NgModule({
@@ -26,7 +25,6 @@ import { IconoPipe } from './pipes/icono.pipe';
     CarrouselComponent,
     ImagenPipe,
     IconoPipe,
-    JuegoencestaComponent,
   ],
   imports: [CommonModule, JuegosRoutingModule, MaterialModule, FormsModule],
   exports: [JuegosRoutingModule],

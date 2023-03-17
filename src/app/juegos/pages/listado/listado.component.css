@@ -12,6 +12,54 @@
   padding-top: 25px;
 }
 
+.sidenav__title{
+  animation: color-change 1s infinite;
+}
+
+@keyframes color-change {
+  0% { color: black; }
+  50% { color: crimson; }
+  100% { color: black; }
+}
+
+.label__titulo{
+  font-size: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.label__content{
+  font-size: 1.2rem;
+  padding-top: 10px;
+}
+
+.generos{
+  text-align: left;
+}
+
+.generos p{
+  display: block;
+
+}
+
+.mat-checkbox .mat-checkbox-frame {
+  transform: scale(3);
+}
+
+.mat-checkbox-checked .mat-checkbox-background {
+  transform: scale(3);
+}
+
+.generos p{
+  padding-left: 53px;
+}
+
+.label__content__genero{
+  font-size: 1.2rem;
+  display: block;
+  margin-top: 0px;
+}
+
 .busqueda{
   padding-left: 30px;
   padding-top: 10px;

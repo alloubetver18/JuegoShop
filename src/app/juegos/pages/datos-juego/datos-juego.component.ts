@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { JuegoencestaComponent } from '../../components/juegoencesta/juegoencesta.component';
 import {
   Juego,
   JuegosPlataforma,
@@ -48,7 +47,7 @@ export class DatosJuegoComponent {
   }
 
   openSnackBar() {
-    this._snackBar.openFromComponent(JuegoencestaComponent, {
+    this._snackBar.open('Juego metido en el carro de la compra', 'Aceptar', {
       duration: this.durationInSeconds * 1000,
     });
   }

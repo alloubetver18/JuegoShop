@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   Juego,
   JuegoShort,
@@ -34,11 +34,18 @@ export class ListadoComponent implements OnInit {
   preciosporNombre: number[] = [];
   juegosporGenero: Juego[] = [];
   preciosporGenero: number[] = [];
+  juegosporPrecio: Juego[] = [];
+  preciosporPrecio: number[] = [];
+  juegosporNumeroJugadores: Juego[] = [];
+  preciosporNumeroJugadores: number[] = [];
   checked = false;
 
   value = '';
-  precio = 10;
+  precioMinimo = 10;
+  precioMaximo = 200;
   jugadores = 1;
+  jugadoresMinimo = 1;
+  jugadoresMaximo = 4;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -241,6 +248,22 @@ export class ListadoComponent implements OnInit {
     }
   }
 
+  //Se toma, o bien el array con todos los juegos encontrados, o bien el array con los
+  //nombres filtrados, o bien el array con los géneros filtrados, y se filtran por precios
+  //mínimos y máximos
+  guardarJuegosporPrecios(
+    listaJuegosEncontrados: Juego[],
+    listaPrecios: number[]
+  ) {}
+  //Se toma, o bien el array con todos los juegos encontrados, o bien el array con los
+  //nombres filtrados, o bien el array con los géneros filtrados, o bien el array con los
+  //precios filtrados,  y se filtran por numero de jugadores
+  //mínimos y máximos
+  guardarJuegosporNumeroJugadores(
+    listaJuegosEncontrados: Juego[],
+    listaPrecios: number[]
+  ) {}
+
   //Al cambiar los filtros, guardar el genero añadido. Luego, empieza a filtrar por ellos.
   filtrarporGeneroJuego(genero: string) {
     if (this.filtroGeneros.indexOf(genero) != -1) {
@@ -271,16 +294,42 @@ export class ListadoComponent implements OnInit {
     );
   }
 
+  //Cuando pulsamos el botón de limpiar caja de texto, se borra su valor y se vuelve a cargar los juegos
+  limpiarValorNombre() {
+    this.value = '';
+    this.filtrarporNombreJuego();
+  }
+
   //Al cambiar el numero de jugadores, vaciamos la lista de juegos en pantalla y filtramos
-  //por aquellos juegos que tengan, al menos, dicho numero de jugadores
-  //Por ejemplo, si el filtro indica 2 jugadores, mostrará aquellos que sean de 2 o más jugadores
-  filtrarporNumeroJugadoresJuego() {}
+  //por aquellos juegos que tengan un numero de jugadores entre los 2 valores
+  filtrarporNumeroJugadoresJuego() {
+    if (this.jugadoresMinimo != this.jugadoresMaximo)
+      console.log(
+        'Buscando juegos para entre ',
+        this.jugadoresMinimo,
+        ' y ',
+        this.jugadoresMaximo,
+        ' jugadores'
+      );
+    else
+      console.log('Buscando juegos para ', this.jugadoresMinimo, ' jugador/es');
+  }
 
   //Al cambiar el valor del precio, vaciamos la lista de juegos en pantalla y filtramos por
   //aquellos juegos cuyo precio sea...
-  //o mayor que el número
-  //o menor que el número
-  filtrarporPrecioJuego() {}
+  //o mayor que el número minimo
+  //y menor que el número máximo
+  filtrarporPrecioJuego() {
+    if (this.precioMinimo != this.precioMaximo)
+      console.log(
+        'Buscando juegos con precios entre ',
+        this.precioMinimo,
+        ' € y ',
+        this.precioMaximo,
+        ' €'
+      );
+    else console.log('Buscando juegos por ', this.precioMinimo, ' € ');
+  }
 
   //Pasando un array de Juegos y un array de numeros, cargamos la lista de los juegos en pantalla
   cargarListaJuegos(listaJuegos: Juego[], listaPrecios: number[]) {

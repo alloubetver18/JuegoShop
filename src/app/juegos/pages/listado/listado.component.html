@@ -1,52 +1,94 @@
 <mat-drawer-container class="container">
   <mat-drawer mode="side" opened class="sidenav">
-    Filtros
+    <h1 class="sidenav__title">Filtros</h1>
+
     <hr />
     <div class="example-label-container">
-      <label id="example-name-label" class="example-name-label">Precio: </label>
-      <label class="example-value-label">{{ precio }}</label>
+      <label id="example-name-label" class="example-name-label label__titulo"
+        >Precio:
+      </label>
     </div>
-    <mat-slider min="10" max="200" [(ngModel)]="precio">
-      <input precio="10" matSliderStartThumb />
-      <input precio="30" matSliderEndThumb />
-    </mat-slider>
-
     <div class="example-label-container">
-      <label class="example-name-label">Nº Jugadores: </label>
-      <label class="example-value-label">{{ jugadores }}</label>
+      <label id="example-name-label" class="example-name-label label__content"
+        >Entre {{ precioMinimo }} y {{ precioMaximo }} €
+      </label>
+    </div>
+    <!-- <div class="example-label-container">
+      <label id="example-name-label" class="example-name-label"
+        >Precio máximo:
+      </label>
+      <label class="example-value-label">{{ precioMaximo }}</label>
+    </div> -->
+    <mat-slider min="10" max="200">
+      <input
+        [(value)]="precioMinimo"
+        matSliderStartThumb
+        (change)="filtrarporPrecioJuego()"
+      />
+      <input
+        [(value)]="precioMaximo"
+        matSliderEndThumb
+        (change)="filtrarporPrecioJuego()"
+      />
+    </mat-slider>
+    <br />
+    <br />
+    <div class="example-label-container">
+      <label class="example-name-label label__titulo">Nº Jugadores: </label>
+      <br />
+      <label
+        class="example-value-label label__content"
+        *ngIf="jugadoresMinimo == jugadoresMaximo"
+        >Para {{ jugadoresMinimo }} jugador/es</label
+      >
+      <label
+        class="example-value-label label__content"
+        *ngIf="jugadoresMinimo != jugadoresMaximo"
+        >Entre {{ jugadoresMinimo }} y {{ jugadoresMaximo }}</label
+      >
     </div>
     <mat-slider min="1" max="4" [(ngModel)]="jugadores">
-      <input precio="1" matSliderStartThumb />
-      <input precio="4" matSliderEndThumb />
+      <input
+        [(value)]="jugadoresMinimo"
+        matSliderStartThumb
+        (change)="filtrarporNumeroJugadoresJuego()"
+      />
+      <input
+        [(value)]="jugadoresMaximo"
+        matSliderEndThumb
+        (change)="filtrarporNumeroJugadoresJuego()"
+      />
     </mat-slider>
+    <br />
+    <br />
     <div class="example-label-container">
-      <label class="example-name-label">Género: </label>
-      <section class="example-section">
+      <label class="example-name-label label__titulo">Género: </label>
+      <section class="example-section generos">
         <p>
-          <mat-checkbox
-            (change)="filtrarporGeneroJuego('RPG')"
-            [(ngModel)]="checked"
-            >RPG</mat-checkbox
+          <mat-checkbox (change)="filtrarporGeneroJuego('RPG')">
+            <span class="label__content__genero">RPG</span></mat-checkbox
           >
         </p>
         <p>
           <mat-checkbox (change)="filtrarporGeneroJuego('Plataformas')"
-            >Plataformas</mat-checkbox
+            ><span class="label__content__genero"
+              >Plataformas</span
+            ></mat-checkbox
           >
         </p>
         <p>
           <mat-checkbox (change)="filtrarporGeneroJuego('Accion')"
-            >Accion</mat-checkbox
+            ><span class="label__content__genero">Accion</span></mat-checkbox
           >
         </p>
         <p>
           <mat-checkbox (change)="filtrarporGeneroJuego('Terror')"
-            >Terror</mat-checkbox
+            ><span class="label__content__genero">Terror</span></mat-checkbox
           >
         </p>
         <p>
           <mat-checkbox (change)="filtrarporGeneroJuego('JRPG')"
-            >JRPG</mat-checkbox
+            ><span class="label__content__genero">JRPG</span></mat-checkbox
           >
         </p>
       </section>
@@ -58,24 +100,20 @@
       <input
         matInput
         type="text"
+        name="nombreJuego"
         [(ngModel)]="value"
+        ngDefaultControl
         (input)="filtrarporNombreJuego()"
         autocomplete="off"
       />
-      <!-- <input matInput type="text" [(ngModel)]="value" autocomplete="off" /> -->
       <button
         *ngIf="value"
         matSuffix
         mat-icon-button
         aria-label="Clear"
-        (click)="value = ''"
+        (click)="limpiarValorNombre()"
       >
-        <mat-icon
-          aria-hidden="false"
-          aria-label="Example home icon"
-          fontIcon="xmark"
-          >xmark</mat-icon
-        >
+        <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
     <section class="spinner" *ngIf="listaJuegos.length === 0">
