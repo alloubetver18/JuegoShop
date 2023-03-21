@@ -39,6 +39,7 @@ export class ListadoComponent implements OnInit {
   juegosporNumeroJugadores: Juego[] = [];
   preciosporNumeroJugadores: number[] = [];
   checked = false;
+  filtrosaAplicar: string[] = [];
 
   value = '';
   precioMinimo = 10;
@@ -186,20 +187,20 @@ export class ListadoComponent implements OnInit {
     this.preciosporNombre = [];
     //Si la longitud del texto de la caja de texto es igual a 0 y la longitud del filtro de
     //generos es 0, se muestran todos los datos.
-    if (this.value.length == 0 && filtroDeGeneros.length == 0) {
+    if (this.value.trim().length == 0 && filtroDeGeneros.length == 0) {
       this.cargarListaJuegos(listaJuegosEncontrados, listaPrecios);
     }
 
     //Si la longitud del texto de la caja de texto es mayor que 0, pero no hay ningún genero,
     //filtramos los nombres llamando a la función nostrarJuegosporNombre
-    if (this.value.length > 0 && filtroDeGeneros.length == 0) {
+    if (this.value.trim().length > 0 && filtroDeGeneros.length == 0) {
       this.guardarJuegosporNombre(listaJuegosEncontrados, listaPrecios);
       this.cargarListaJuegos(this.juegosporNombre, this.preciosporNombre);
     }
 
     //Si, además, existe algún género seleccionado, llamamos a mostrarJuegosporGenero
     //Y llenamos el array de listaJuegos
-    if (this.value.length > 0 && filtroDeGeneros.length > 0) {
+    if (this.value.trim().length > 0 && filtroDeGeneros.length > 0) {
       this.guardarJuegosporNombre(listaJuegosEncontrados, listaPrecios);
       this.guardarJuegosporGenero(this.juegosporNombre, this.preciosporNombre);
       this.cargarListaJuegos(this.juegosporGenero, this.preciosporGenero);
@@ -207,7 +208,7 @@ export class ListadoComponent implements OnInit {
 
     //En el caso de que solo se cambie el género sin poner nombre, solo se llama a
     //mostrarJuegosporGenero con todos los juegos encontrados.
-    if (this.value.length == 0 && filtroDeGeneros.length > 0) {
+    if (this.value.trim().length == 0 && filtroDeGeneros.length > 0) {
       this.guardarJuegosporGenero(listaJuegosEncontrados, listaPrecios);
       this.cargarListaJuegos(this.juegosporGenero, this.preciosporGenero);
     }
@@ -223,7 +224,7 @@ export class ListadoComponent implements OnInit {
     for (let i = 0; i < listaJuegosEncontrados.length; i++) {
       if (
         listaJuegosEncontrados[i].NombreJuego.toLowerCase().includes(
-          this.value.toLowerCase()
+          this.value.trim().toLowerCase()
         )
       ) {
         this.juegosporNombre.push(listaJuegosEncontrados[i]);
@@ -276,6 +277,20 @@ export class ListadoComponent implements OnInit {
       this.filtroGeneros.push(genero);
     }
 
+    if (
+      this.filtroGeneros.length > 0 &&
+      this.filtrosaAplicar.indexOf('genero') == -1
+    )
+      this.filtrosaAplicar.push('genero');
+    else if (this.filtroGeneros.length == 0) {
+      const eliminarFiltro = this.filtrosaAplicar.filter(
+        (filtros) => filtros != 'genero'
+      );
+      this.filtrosaAplicar = eliminarFiltro;
+    }
+
+    console.log(this.filtrosaAplicar);
+
     this.listaJuegos = [];
     this.guardaryCargarJuegos(
       this.juegosEncontrados,
@@ -286,6 +301,17 @@ export class ListadoComponent implements OnInit {
 
   //Al cambiar el nombre, vacía la lista de juegos en pantalla y empieza a filtrarla.
   filtrarporNombreJuego() {
+    if (this.value.length > 0 && this.filtrosaAplicar.indexOf('nombre') == -1)
+      this.filtrosaAplicar.push('nombre');
+    else if (this.value.length == 0) {
+      const eliminarFiltro = this.filtrosaAplicar.filter(
+        (filtros) => filtros != 'nombre'
+      );
+      this.filtrosaAplicar = eliminarFiltro;
+    }
+
+    console.log(this.filtrosaAplicar);
+
     this.listaJuegos = [];
     this.guardaryCargarJuegos(
       this.juegosEncontrados,
@@ -341,6 +367,57 @@ export class ListadoComponent implements OnInit {
         Precio: listaPrecios[i],
       };
       this.listaJuegos.push(juegonuevo);
+    }
+  }
+
+  //Obteniendo como parámetros una lista de juegos completa y una lista de precios,
+  //comprobará si existen filtros a aplicar sobre dicha lista de juegos.
+  //En caso de no haberlos, cargará toda la lista de juegos.
+  //En el caso de si haberlos, creará una copia local, irá filtrando en base a ella, y cuando
+  //acabe de filtrar, la mostrará por pantalla.
+  filtroNuevo(listaJuegosEncontrados: Juego[], listaPrecios: number[]) {
+    if (this.filtrosaAplicar.length == 0) {
+      this.cargarListaJuegos(listaJuegosEncontrados, listaPrecios);
+    } else {
+      let listaJuegosFiltrados: Juego[] = listaJuegosEncontrados;
+      let listaPreciosFiltrados: number[] = listaPrecios;
+      this.filtrosaAplicar.forEach((filtro) => {
+        switch (filtro) {
+          case 'genero':
+            this.guardarJuegosporGenero(
+              listaJuegosFiltrados,
+              listaPreciosFiltrados
+            );
+            listaJuegosFiltrados = this.juegosporGenero;
+            listaPreciosFiltrados = this.preciosporGenero;
+            break;
+          case 'nombre':
+            this.guardarJuegosporNombre(
+              listaJuegosFiltrados,
+              listaPreciosFiltrados
+            );
+            listaJuegosFiltrados = this.juegosporNombre;
+            listaPreciosFiltrados = this.preciosporNombre;
+            break;
+          case 'precio':
+            this.guardarJuegosporPrecios(
+              listaJuegosFiltrados,
+              listaPreciosFiltrados
+            );
+            listaJuegosFiltrados = this.juegosporPrecio;
+            listaPreciosFiltrados = this.preciosporPrecio;
+            break;
+          case 'numerojugadores':
+            this.guardarJuegosporNumeroJugadores(
+              listaJuegosFiltrados,
+              listaPreciosFiltrados
+            );
+            listaJuegosFiltrados = this.juegosporNumeroJugadores;
+            listaPreciosFiltrados = this.preciosporNumeroJugadores;
+            break;
+        }
+      });
+      this.cargarListaJuegos(listaJuegosFiltrados, listaPreciosFiltrados);
     }
   }
 }

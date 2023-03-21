@@ -8,17 +8,19 @@
         >Precio:
       </label>
     </div>
-    <div class="example-label-container">
+    <div class="example-label-container" *ngIf="precioMinimo != precioMaximo">
       <label id="example-name-label" class="example-name-label label__content"
         >Entre {{ precioMinimo }} y {{ precioMaximo }} €
       </label>
     </div>
-    <!-- <div class="example-label-container">
-      <label id="example-name-label" class="example-name-label"
-        >Precio máximo:
+    <div class="example-label-container" *ngIf="precioMinimo == precioMaximo">
+      <label id="example-name-label" class="example-name-label label__content"
+        >Precio:
       </label>
-      <label class="example-value-label">{{ precioMaximo }}</label>
-    </div> -->
+      <label class="example-value-label label__content"
+        >{{ precioMaximo }} €</label
+      >
+    </div>
     <mat-slider min="10" max="200">
       <input
         [(value)]="precioMinimo"
