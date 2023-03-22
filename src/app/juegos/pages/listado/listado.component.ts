@@ -165,11 +165,7 @@ export class ListadoComponent implements OnInit {
       this.juegosService.getJuegoPorId(listaIdsJuegos[i]).subscribe((juego) => {
         this.juegosEncontrados.push(juego[0]);
         if (i == listaIdsJuegos.length - 1)
-          this.guardaryCargarJuegos(
-            this.juegosEncontrados,
-            this.filtroGeneros,
-            listaPrecios
-          );
+          this.guardaryCargarJuegos(this.juegosEncontrados, listaPrecios);
       });
     }
   }
@@ -178,40 +174,18 @@ export class ListadoComponent implements OnInit {
   //mostraremos la lista de juegos por pantalla.
   guardaryCargarJuegos(
     listaJuegosEncontrados: Juego[],
-    filtroDeGeneros: string[],
     listaPrecios: number[]
   ) {
     this.juegosporGenero = [];
     this.preciosporGenero = [];
     this.juegosporNombre = [];
     this.preciosporNombre = [];
-    //Si la longitud del texto de la caja de texto es igual a 0 y la longitud del filtro de
-    //generos es 0, se muestran todos los datos.
-    if (this.value.trim().length == 0 && filtroDeGeneros.length == 0) {
-      this.cargarListaJuegos(listaJuegosEncontrados, listaPrecios);
-    }
+    this.juegosporPrecio = [];
+    this.preciosporPrecio = [];
+    this.juegosporNumeroJugadores = [];
+    this.preciosporNumeroJugadores = [];
 
-    //Si la longitud del texto de la caja de texto es mayor que 0, pero no hay ningún genero,
-    //filtramos los nombres llamando a la función nostrarJuegosporNombre
-    if (this.value.trim().length > 0 && filtroDeGeneros.length == 0) {
-      this.guardarJuegosporNombre(listaJuegosEncontrados, listaPrecios);
-      this.cargarListaJuegos(this.juegosporNombre, this.preciosporNombre);
-    }
-
-    //Si, además, existe algún género seleccionado, llamamos a mostrarJuegosporGenero
-    //Y llenamos el array de listaJuegos
-    if (this.value.trim().length > 0 && filtroDeGeneros.length > 0) {
-      this.guardarJuegosporNombre(listaJuegosEncontrados, listaPrecios);
-      this.guardarJuegosporGenero(this.juegosporNombre, this.preciosporNombre);
-      this.cargarListaJuegos(this.juegosporGenero, this.preciosporGenero);
-    }
-
-    //En el caso de que solo se cambie el género sin poner nombre, solo se llama a
-    //mostrarJuegosporGenero con todos los juegos encontrados.
-    if (this.value.trim().length == 0 && filtroDeGeneros.length > 0) {
-      this.guardarJuegosporGenero(listaJuegosEncontrados, listaPrecios);
-      this.cargarListaJuegos(this.juegosporGenero, this.preciosporGenero);
-    }
+    this.filtrarJuegos(listaJuegosEncontrados, listaPrecios);
   }
 
   //Se toma el nombre y se busca dentro del array de Juegos. Si hay una conicidencia
@@ -255,7 +229,17 @@ export class ListadoComponent implements OnInit {
   guardarJuegosporPrecios(
     listaJuegosEncontrados: Juego[],
     listaPrecios: number[]
-  ) {}
+  ) {
+    for (let i = 0; i < listaJuegosEncontrados.length; i++) {
+      if (
+        listaPrecios[i] >= this.precioMinimo &&
+        listaPrecios[i] <= this.precioMaximo
+      ) {
+        this.juegosporPrecio.push(listaJuegosEncontrados[i]);
+        this.preciosporPrecio.push(listaPrecios[i]);
+      }
+    }
+  }
   //Se toma, o bien el array con todos los juegos encontrados, o bien el array con los
   //nombres filtrados, o bien el array con los géneros filtrados, o bien el array con los
   //precios filtrados,  y se filtran por numero de jugadores
@@ -263,7 +247,17 @@ export class ListadoComponent implements OnInit {
   guardarJuegosporNumeroJugadores(
     listaJuegosEncontrados: Juego[],
     listaPrecios: number[]
-  ) {}
+  ) {
+    for (let i = 0; i < listaJuegosEncontrados.length; i++) {
+      if (
+        listaJuegosEncontrados[i].JugadoresMaximos >= this.jugadoresMinimo &&
+        listaJuegosEncontrados[i].JugadoresMaximos <= this.jugadoresMaximo
+      ) {
+        this.juegosporNumeroJugadores.push(listaJuegosEncontrados[i]);
+        this.preciosporNumeroJugadores.push(listaPrecios[i]);
+      }
+    }
+  }
 
   //Al cambiar los filtros, guardar el genero añadido. Luego, empieza a filtrar por ellos.
   filtrarporGeneroJuego(genero: string) {
@@ -292,11 +286,7 @@ export class ListadoComponent implements OnInit {
     console.log(this.filtrosaAplicar);
 
     this.listaJuegos = [];
-    this.guardaryCargarJuegos(
-      this.juegosEncontrados,
-      this.filtroGeneros,
-      this.listaPrecios
-    );
+    this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);
   }
 
   //Al cambiar el nombre, vacía la lista de juegos en pantalla y empieza a filtrarla.
@@ -313,11 +303,7 @@ export class ListadoComponent implements OnInit {
     console.log(this.filtrosaAplicar);
 
     this.listaJuegos = [];
-    this.guardaryCargarJuegos(
-      this.juegosEncontrados,
-      this.filtroGeneros,
-      this.listaPrecios
-    );
+    this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);
   }
 
   //Cuando pulsamos el botón de limpiar caja de texto, se borra su valor y se vuelve a cargar los juegos
@@ -329,16 +315,24 @@ export class ListadoComponent implements OnInit {
   //Al cambiar el numero de jugadores, vaciamos la lista de juegos en pantalla y filtramos
   //por aquellos juegos que tengan un numero de jugadores entre los 2 valores
   filtrarporNumeroJugadoresJuego() {
-    if (this.jugadoresMinimo != this.jugadoresMaximo)
-      console.log(
-        'Buscando juegos para entre ',
-        this.jugadoresMinimo,
-        ' y ',
-        this.jugadoresMaximo,
-        ' jugadores'
+    if (
+      (this.jugadoresMinimo > 1 ||
+        this.jugadoresMaximo <= 4 ||
+        this.jugadoresMinimo == this.jugadoresMaximo) &&
+      this.filtrosaAplicar.indexOf('numerojugadores') == -1
+    )
+      this.filtrosaAplicar.push('numerojugadores');
+    else if (this.jugadoresMinimo == 1 && this.jugadoresMaximo == 4) {
+      const eliminarFiltro = this.filtrosaAplicar.filter(
+        (filtros) => filtros != 'numerojugadores'
       );
-    else
-      console.log('Buscando juegos para ', this.jugadoresMinimo, ' jugador/es');
+      this.filtrosaAplicar = eliminarFiltro;
+    }
+
+    console.log(this.filtrosaAplicar);
+
+    this.listaJuegos = [];
+    this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);
   }
 
   //Al cambiar el valor del precio, vaciamos la lista de juegos en pantalla y filtramos por
@@ -346,15 +340,22 @@ export class ListadoComponent implements OnInit {
   //o mayor que el número minimo
   //y menor que el número máximo
   filtrarporPrecioJuego() {
-    if (this.precioMinimo != this.precioMaximo)
-      console.log(
-        'Buscando juegos con precios entre ',
-        this.precioMinimo,
-        ' € y ',
-        this.precioMaximo,
-        ' €'
+    if (
+      (this.precioMinimo > 10 || this.precioMaximo < 200) &&
+      this.filtrosaAplicar.indexOf('precio') == -1
+    )
+      this.filtrosaAplicar.push('precio');
+    else if (this.precioMinimo == 10 && this.precioMaximo == 200) {
+      const eliminarFiltro = this.filtrosaAplicar.filter(
+        (filtros) => filtros != 'precio'
       );
-    else console.log('Buscando juegos por ', this.precioMinimo, ' € ');
+      this.filtrosaAplicar = eliminarFiltro;
+    }
+
+    console.log(this.filtrosaAplicar);
+
+    this.listaJuegos = [];
+    this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);
   }
 
   //Pasando un array de Juegos y un array de numeros, cargamos la lista de los juegos en pantalla
@@ -375,7 +376,7 @@ export class ListadoComponent implements OnInit {
   //En caso de no haberlos, cargará toda la lista de juegos.
   //En el caso de si haberlos, creará una copia local, irá filtrando en base a ella, y cuando
   //acabe de filtrar, la mostrará por pantalla.
-  filtroNuevo(listaJuegosEncontrados: Juego[], listaPrecios: number[]) {
+  filtrarJuegos(listaJuegosEncontrados: Juego[], listaPrecios: number[]) {
     if (this.filtrosaAplicar.length == 0) {
       this.cargarListaJuegos(listaJuegosEncontrados, listaPrecios);
     } else {

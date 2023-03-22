@@ -120,6 +120,7 @@
     </mat-form-field>
     <section class="spinner" *ngIf="listaJuegos.length === 0">
       <mat-spinner></mat-spinner>
+      <span>Buscando juegos...</span>
     </section>
     <section class="card_games" *ngIf="listaJuegos.length > 0">
       <div class="card_games__item" *ngFor="let item of listaJuegos">

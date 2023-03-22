@@ -91,9 +91,11 @@
       placeholder="Salir"
     ></button>
   </mat-menu> -->
-  <a
+  <!-- <a
     title="Cesta"
     class="enlaces cesta"
     (click)="openDialogEnConstruccion()"
-  ></a>
+    [routerLink]="['/cesta/']"
+  ></a> -->
+  <a title="Cesta" class="enlaces cesta" [routerLink]="['/cesta/']"></a>
 </nav>

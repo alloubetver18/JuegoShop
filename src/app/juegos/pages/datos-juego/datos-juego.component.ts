@@ -36,6 +36,9 @@ export class DatosJuegoComponent {
   };
   rutaimagen: String = '../../../../assets/';
   durationInSeconds = 2;
+
+  juegosGuardados: string = '';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private juegosService: JuegosService,
@@ -47,6 +50,30 @@ export class DatosJuegoComponent {
   }
 
   openSnackBar() {
+    if (localStorage.getItem('cart') == null)
+      localStorage.setItem(
+        'cart',
+        this.juegoConsultado.IdJuego +
+          '/' +
+          this.plataformas[0].IdPlataforma +
+          '/' +
+          this.juegoConsultado.Precio +
+          'Y'
+      );
+    else {
+      this.juegosGuardados = localStorage.getItem('cart') || '';
+      this.juegosGuardados = this.juegosGuardados.replaceAll('Y', 'X');
+      localStorage.setItem(
+        'cart',
+        this.juegosGuardados +
+          this.juegoConsultado.IdJuego +
+          '/' +
+          this.plataformas[0].IdPlataforma +
+          '/' +
+          this.juegoConsultado.Precio +
+          'Y'
+      );
+    }
     this._snackBar.open('Juego metido en el carro de la compra', 'Aceptar', {
       duration: this.durationInSeconds * 1000,
     });
