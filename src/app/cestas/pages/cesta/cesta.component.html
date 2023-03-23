@@ -1,7 +1,47 @@
 <section class="container">
-  <h1>CESTA DE LA COMPRA</h1>
+  <h1>Cesta</h1>
   <div class="container__datos__cesta">
-    <section class="cesta">Aquí irá una lista con los juegos elegidos</section>
+    <section class="cesta" *ngIf="cesta">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z8 demo-table tabla__cesta"
+      >
+        <!-- Name Column -->
+        <ng-container matColumnDef="NombreJuego">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let element">{{ element.NombreJuego }}</td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="IdPlataforma">
+          <th mat-header-cell *matHeaderCellDef>Plataforma</th>
+          <td mat-cell *matCellDef="let element">{{ element.IdPlataforma }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Precio">
+          <th mat-header-cell *matHeaderCellDef>Precio</th>
+          <td mat-cell *matCellDef="let element">{{ element.Precio }}</td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Borrar">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <span class="span__borrar" (click)="borrarJuego(element.IdJuego)"
+              >Borrar</span
+            >
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </section>
+    <section class="spinner" *ngIf="!cesta">
+      <span>Cargando...</span>
+    </section>
     <section class="precio">
       Aquí irá una caja con el cálculo del precio total y un botón para comprar
       que, en teoría, mandaría a una página de método de pago.

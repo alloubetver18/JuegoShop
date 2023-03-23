@@ -16,8 +16,20 @@
 .cesta{
   width: 60%;
   height: 300px;
+  min-height: 300px;
+  max-height: 400px;
+  overflow: auto;
   margin: 0 30px 10px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.tabla__cesta{
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.span__borrar{
+  cursor: pointer;
 }
 
 .precio{
