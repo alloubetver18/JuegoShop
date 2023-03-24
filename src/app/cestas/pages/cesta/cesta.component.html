@@ -1,9 +1,10 @@
 <section class="container">
   <h1>Cesta</h1>
   <div class="container__datos__cesta">
-    <section class="cesta" *ngIf="cesta">
+    <section class="cesta" *ngIf="datosJuegosCestaLlena.length > 0 && cesta">
       <table
         mat-table
+        #table
         [dataSource]="dataSource"
         class="mat-elevation-z8 demo-table tabla__cesta"
       >
@@ -39,9 +40,10 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </section>
-    <section class="spinner" *ngIf="!cesta">
-      <span>Cargando...</span>
-    </section>
+    <section
+      class="spinner"
+      *ngIf="datosJuegosCestaLlena.length == 0"
+    ></section>
     <section class="precio">
       Aquí irá una caja con el cálculo del precio total y un botón para comprar
       que, en teoría, mandaría a una página de método de pago.
