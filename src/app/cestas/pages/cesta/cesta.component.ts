@@ -11,13 +11,31 @@ export interface DatosCesta {
   Precio: number;
 }
 
+export interface PeriodicElement {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
+
+let ELEMENT_CART: JuegoShort[] = [];
+
 @Component({
   selector: 'app-cesta',
   templateUrl: './cesta.component.html',
   styleUrls: ['./cesta.component.css'],
 })
 export class CestaComponent {
-  ELEMENT_DATA: JuegoShort[] = [];
+  @ViewChild(MatTable)
+  table!: MatTable<PeriodicElement>;
+
+  displayedColumns: string[] = [
+    'NombreJuego',
+    'IdPlataforma',
+    'Precio',
+    'Borrar',
+  ];
+  dataSource = ELEMENT_CART;
 
   cesta: boolean = false;
   cestaLlena: string = '';
@@ -38,24 +56,10 @@ export class CestaComponent {
     Precio: 0,
   };
 
-  displayedColumns: string[] = [
-    'NombreJuego',
-    'IdPlataforma',
-    'Precio',
-    'Borrar',
-  ];
+  precioTotal: number = 0;
 
-  /* dataSource = [...this.datosElementosCestaFormateados]; */
-  dataSource!: ExampleDataSource;
-  dataToDisplay: JuegoShort[] = [];
-
-  @ViewChild(MatTable) table!: MatTable<JuegoShort>;
-
-  constructor(private juegosService: JuegosService) {
-    this.dataSource = new ExampleDataSource([...this.datosJuegosCestaLlena]);
+  constructor() {
     this.obtenerDatosCesta();
-    /* console.log('Datos en el constructor: ', this.datosJuegosCestaLlena);
-    this.dataSource.setData(this.datosJuegosCestaLlena); */
   }
 
   ngOnInit(): void {
@@ -74,23 +78,21 @@ export class CestaComponent {
     //Add 'implements AfterViewChecked' to the class.
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    console.log('saliendo');
+    this.vaciarTabla();
+  }
+
   obtenerDatosCesta() {
     //Paso 1: Revisamos LS. Si no tiene datos, sale. Si los tiene, los recupera.
     if (localStorage.getItem('cart') == null) this.cesta = false;
     else {
       this.formatearDatosLocalStorage();
-      //Aquí, ya tenemos los datos que se mostrarán en la cesta, pero sin el nombre del juego
-      //correspondiente. Ahora, buscaremos el nombre del juego y lo añadiremos
-      //a cada elemento. Luego, con los datos correctos, iremos llenando un nuevo array, esta vez con
-      //todos los datos.
       this.cargarCestaEnMemoria();
-      console.log('Cesta de la compra: ', this.datosJuegosCestaLlena);
-      //Una vez con todos los datos, debemos refrescar la pantalla para que los datos se hagan visibles.
-      //TODO Encontrar la forma de refrescar adecuadamente.
-
+      this.calcularPrecioFinal();
       this.cesta = true;
-
-      this.dataSource.setData(this.datosJuegosCestaLlena);
     }
   }
 
@@ -101,62 +103,43 @@ export class CestaComponent {
   //Precio
   //y los almacena en un array para los datos formateados llamado datosElementosCestaFormateados
   formatearDatosLocalStorage() {
-    this.cestaLlena = localStorage.getItem('cart') || '';
-    this.cestaLlena = this.cestaLlena.replaceAll('Y', '');
-    this.elementosCesta = this.cestaLlena.split('X');
-    this.elementosCesta.forEach((elementoCesta) => {
-      this.datosElementosCesta = elementoCesta.split('/');
-      this.infoDatosCesta = {
-        idJuego: parseInt(this.datosElementosCesta[0]),
-        idPlataforma: parseInt(this.datosElementosCesta[1]),
-        Precio: parseFloat(this.datosElementosCesta[2]),
-      };
-      this.datosElementosCestaFormateados.push(this.infoDatosCesta);
-    });
+    this.datosJuegosCestaLlena = JSON.parse(localStorage.getItem('cart') || '');
   }
   //Función que, para cada elemento de datosElementosCestaFormateados, llamará al servicio y obtendrá,
   //en base a su IdJuego, su NombreJuego y, utilizando el nombre y los datos de cada elemento de
   //datosElementosCestaFormateados, llenará un nuevo array de tipo juegoShort que contendrá todos los
   //datos del juego mas su nombre.
   cargarCestaEnMemoria() {
-    this.datosElementosCestaFormateados.forEach((element) => {
-      this.juegosService.getJuegoPorId(element.idJuego).subscribe((juego) => {
-        this.datosJuegoCesta = {
-          IdJuego: element.idJuego,
-          NombreJuego: juego[0].NombreJuego,
-          IdPlataforma: element.idPlataforma,
-          Precio: element.Precio,
-        };
-        this.datosJuegosCestaLlena.push(this.datosJuegoCesta);
-      });
+    this.datosJuegosCestaLlena.forEach((elementoCesta) => {
+      ELEMENT_CART.push(elementoCesta);
     });
   }
 
   borrarJuego(idJuegoBorrar: number) {
     console.log('Borrando juego con id: ', idJuegoBorrar);
+
     const resultado = this.datosJuegosCestaLlena.filter(
       (Juego) => Juego.IdJuego != idJuegoBorrar
     );
     this.datosJuegosCestaLlena = resultado;
-    this.dataSource.setData(this.datosJuegosCestaLlena);
-  }
-}
-
-class ExampleDataSource extends DataSource<JuegoShort> {
-  private _dataStream = new ReplaySubject<JuegoShort[]>();
-
-  constructor(initialData: JuegoShort[]) {
-    super();
-    this.setData(initialData);
+    localStorage.setItem('cart', JSON.stringify(this.datosJuegosCestaLlena));
+    this.vaciarTabla();
+    this.formatearDatosLocalStorage();
+    this.cargarCestaEnMemoria();
+    this.calcularPrecioFinal();
+    this.table.renderRows();
   }
 
-  connect(): Observable<JuegoShort[]> {
-    return this._dataStream;
+  vaciarTabla() {
+    this.datosJuegosCestaLlena.length = 0;
+    ELEMENT_CART.length = 0;
+    this.precioTotal = 0;
   }
 
-  disconnect() {}
-
-  setData(data: JuegoShort[]) {
-    this._dataStream.next(data);
+  calcularPrecioFinal() {
+    this.precioTotal = 0;
+    this.datosJuegosCestaLlena.forEach((element) => {
+      if (element.Precio != undefined) this.precioTotal += element.Precio;
+    });
   }
 }

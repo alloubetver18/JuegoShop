@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   Juego,
   JuegoShort,
@@ -184,6 +184,12 @@ export class ListadoComponent implements OnInit {
     this.preciosporPrecio = [];
     this.juegosporNumeroJugadores = [];
     this.preciosporNumeroJugadores = [];
+    //TODO Ordenar array de juegos para que aparezca ordenado por la IdJuego
+    listaJuegosEncontrados.sort(function (a, b) {
+      if (a.IdJuego < b.IdJuego) return -1;
+      else if (a.IdJuego > b.IdJuego) return 1;
+      else return 0;
+    });
 
     this.filtrarJuegos(listaJuegosEncontrados, listaPrecios);
   }
@@ -283,8 +289,6 @@ export class ListadoComponent implements OnInit {
       this.filtrosaAplicar = eliminarFiltro;
     }
 
-    console.log(this.filtrosaAplicar);
-
     this.listaJuegos = [];
     this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);
   }
@@ -299,8 +303,6 @@ export class ListadoComponent implements OnInit {
       );
       this.filtrosaAplicar = eliminarFiltro;
     }
-
-    console.log(this.filtrosaAplicar);
 
     this.listaJuegos = [];
     this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);
@@ -329,8 +331,6 @@ export class ListadoComponent implements OnInit {
       this.filtrosaAplicar = eliminarFiltro;
     }
 
-    console.log(this.filtrosaAplicar);
-
     this.listaJuegos = [];
     this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);
   }
@@ -351,8 +351,6 @@ export class ListadoComponent implements OnInit {
       );
       this.filtrosaAplicar = eliminarFiltro;
     }
-
-    console.log(this.filtrosaAplicar);
 
     this.listaJuegos = [];
     this.guardaryCargarJuegos(this.juegosEncontrados, this.listaPrecios);

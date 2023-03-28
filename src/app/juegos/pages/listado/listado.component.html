@@ -24,11 +24,13 @@
     <mat-slider min="10" max="200">
       <input
         [(value)]="precioMinimo"
+        name="precioMinimo"
         matSliderStartThumb
         (change)="filtrarporPrecioJuego()"
       />
       <input
         [(value)]="precioMaximo"
+        name="precioMaximo"
         matSliderEndThumb
         (change)="filtrarporPrecioJuego()"
       />
@@ -49,14 +51,22 @@
         >Entre {{ jugadoresMinimo }} y {{ jugadoresMaximo }}</label
       >
     </div>
-    <mat-slider min="1" max="4" [(ngModel)]="jugadores">
+    <mat-slider
+      min="1"
+      max="4"
+      name="jugadores"
+      ngDefaultControl
+      [(ngModel)]="jugadores"
+    >
       <input
         [(value)]="jugadoresMinimo"
+        name="jugadoresMinimo"
         matSliderStartThumb
         (change)="filtrarporNumeroJugadoresJuego()"
       />
       <input
         [(value)]="jugadoresMaximo"
+        name="jugadoresMaximo"
         matSliderEndThumb
         (change)="filtrarporNumeroJugadoresJuego()"
       />
@@ -67,29 +77,31 @@
       <label class="example-name-label label__titulo">Género: </label>
       <section class="example-section generos">
         <p>
-          <mat-checkbox (change)="filtrarporGeneroJuego('RPG')">
+          <mat-checkbox name="RPG" (change)="filtrarporGeneroJuego('RPG')">
             <span class="label__content__genero">RPG</span></mat-checkbox
           >
         </p>
         <p>
-          <mat-checkbox (change)="filtrarporGeneroJuego('Plataformas')"
+          <mat-checkbox
+            name="Plataformas"
+            (change)="filtrarporGeneroJuego('Plataformas')"
             ><span class="label__content__genero"
               >Plataformas</span
             ></mat-checkbox
           >
         </p>
         <p>
-          <mat-checkbox (change)="filtrarporGeneroJuego('Accion')"
+          <mat-checkbox name="Accion" (change)="filtrarporGeneroJuego('Accion')"
             ><span class="label__content__genero">Accion</span></mat-checkbox
           >
         </p>
         <p>
-          <mat-checkbox (change)="filtrarporGeneroJuego('Terror')"
+          <mat-checkbox name="Terror" (change)="filtrarporGeneroJuego('Terror')"
             ><span class="label__content__genero">Terror</span></mat-checkbox
           >
         </p>
         <p>
-          <mat-checkbox (change)="filtrarporGeneroJuego('JRPG')"
+          <mat-checkbox name="JRPG" (change)="filtrarporGeneroJuego('JRPG')"
             ><span class="label__content__genero">JRPG</span></mat-checkbox
           >
         </p>
@@ -103,8 +115,8 @@
         matInput
         type="text"
         name="nombreJuego"
-        [(ngModel)]="value"
         ngDefaultControl
+        [(ngModel)]="value"
         (input)="filtrarporNombreJuego()"
         autocomplete="off"
       />

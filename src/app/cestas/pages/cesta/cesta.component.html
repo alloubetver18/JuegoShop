@@ -17,7 +17,13 @@
         <!-- Weight Column -->
         <ng-container matColumnDef="IdPlataforma">
           <th mat-header-cell *matHeaderCellDef>Plataforma</th>
-          <td mat-cell *matCellDef="let element">{{ element.IdPlataforma }}</td>
+          <td mat-cell *matCellDef="let element">
+            <img
+              [src]="element.IdPlataforma | iconoplataforma"
+              alt=""
+              srcset=""
+            />
+          </td>
         </ng-container>
 
         <!-- Symbol Column -->
@@ -41,9 +47,13 @@
       </table>
     </section>
     <section
-      class="spinner"
+      class="spinner cesta_vacia"
       *ngIf="datosJuegosCestaLlena.length == 0"
-    ></section>
+    >
+      <span class="mensaje_cesta_vacia"
+        >La cesta se encuentra vacia en este momento.</span
+      >
+    </section>
     <section class="precio">
       Aquí irá una caja con el cálculo del precio total y un botón para comprar
       que, en teoría, mandaría a una página de método de pago.

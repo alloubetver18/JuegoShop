@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import {
   Juego,
+  JuegoShort,
   JuegosPlataforma,
   Plataforma,
 } from '../../interfaces/juegos.interfaces';
@@ -15,6 +16,13 @@ import { JuegosService } from '../../services/juegos.service';
   styleUrls: ['./datos-juego.component.css'],
 })
 export class DatosJuegoComponent {
+  cestaDeLaCompra: JuegoShort[] = [];
+  juegoParaLaCesta: JuegoShort = {
+    IdJuego: 0,
+    NombreJuego: '',
+    IdPlataforma: 0,
+    Precio: 0,
+  };
   juego: boolean = false;
   juegoConsultado: Juego = {
     IdJuego: 0,
@@ -48,31 +56,28 @@ export class DatosJuegoComponent {
   ngOnInit(): void {
     this.obtenerDatosdeJuegoporsuId();
   }
-
+  //TODO Mediante JSON.stringify, convertir un array de objetos en una cadena JSON. Para recuperarlo,
+  //utilizar JSON.parse();
   openSnackBar() {
-    if (localStorage.getItem('cart') == null)
-      localStorage.setItem(
-        'cart',
-        this.juegoConsultado.IdJuego +
-          '/' +
-          this.plataformas[0].IdPlataforma +
-          '/' +
-          this.juegoConsultado.Precio +
-          'Y'
-      );
-    else {
-      this.juegosGuardados = localStorage.getItem('cart') || '';
-      this.juegosGuardados = this.juegosGuardados.replaceAll('Y', 'X');
-      localStorage.setItem(
-        'cart',
-        this.juegosGuardados +
-          this.juegoConsultado.IdJuego +
-          '/' +
-          this.plataformas[0].IdPlataforma +
-          '/' +
-          this.juegoConsultado.Precio +
-          'Y'
-      );
+    if (localStorage.getItem('cart') == null) {
+      this.juegoParaLaCesta = {
+        IdJuego: this.juegoConsultado.IdJuego,
+        NombreJuego: this.juegoConsultado.NombreJuego,
+        IdPlataforma: this.plataformas[0].IdPlataforma,
+        Precio: this.juegoConsultado.Precio,
+      };
+      this.cestaDeLaCompra.push(this.juegoParaLaCesta);
+      localStorage.setItem('cart', JSON.stringify(this.cestaDeLaCompra));
+    } else {
+      this.cestaDeLaCompra = JSON.parse(localStorage.getItem('cart') || '');
+      this.juegoParaLaCesta = {
+        IdJuego: this.juegoConsultado.IdJuego,
+        NombreJuego: this.juegoConsultado.NombreJuego,
+        IdPlataforma: this.plataformas[0].IdPlataforma,
+        Precio: this.juegoConsultado.Precio,
+      };
+      this.cestaDeLaCompra.push(this.juegoParaLaCesta);
+      localStorage.setItem('cart', JSON.stringify(this.cestaDeLaCompra));
     }
     this._snackBar.open('Juego metido en el carro de la compra', 'Aceptar', {
       duration: this.durationInSeconds * 1000,
