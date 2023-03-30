@@ -10,6 +10,14 @@ import {
 } from '../../interfaces/juegos.interfaces';
 import { JuegosService } from '../../services/juegos.service';
 
+export interface DatosCesta {
+  IdJuego: number;
+  NombreJuego: string;
+  IdPlataforma: number;
+  Precio?: number;
+  Cantidad: number;
+}
+
 @Component({
   selector: 'app-datos-juego',
   templateUrl: './datos-juego.component.html',
@@ -17,6 +25,14 @@ import { JuegosService } from '../../services/juegos.service';
 })
 export class DatosJuegoComponent {
   cestaDeLaCompra: JuegoShort[] = [];
+  cestaDeLaCompraPrima: DatosCesta[] = [];
+  juegoParaLaCestaPrima: DatosCesta = {
+    IdJuego: 0,
+    NombreJuego: '',
+    IdPlataforma: 0,
+    Precio: 0.0,
+    Cantidad: 0,
+  };
   juegoParaLaCesta: JuegoShort = {
     IdJuego: 0,
     NombreJuego: '',
@@ -60,29 +76,93 @@ export class DatosJuegoComponent {
   //utilizar JSON.parse();
   openSnackBar() {
     if (localStorage.getItem('cart') == null) {
-      this.juegoParaLaCesta = {
+      this.juegoParaLaCestaPrima = {
         IdJuego: this.juegoConsultado.IdJuego,
         NombreJuego: this.juegoConsultado.NombreJuego,
         IdPlataforma: this.plataformas[0].IdPlataforma,
         Precio: this.juegoConsultado.Precio,
+        Cantidad: 1,
       };
-      this.cestaDeLaCompra.push(this.juegoParaLaCesta);
-      localStorage.setItem('cart', JSON.stringify(this.cestaDeLaCompra));
+      this.cestaDeLaCompraPrima.push(this.juegoParaLaCestaPrima);
+      this._snackBar.open('Juego metido en el carro de la compra', 'Aceptar', {
+        duration: this.durationInSeconds * 1000,
+      });
     } else {
-      this.cestaDeLaCompra = JSON.parse(localStorage.getItem('cart') || '');
-      this.juegoParaLaCesta = {
-        IdJuego: this.juegoConsultado.IdJuego,
-        NombreJuego: this.juegoConsultado.NombreJuego,
-        IdPlataforma: this.plataformas[0].IdPlataforma,
-        Precio: this.juegoConsultado.Precio,
-      };
-      this.cestaDeLaCompra.push(this.juegoParaLaCesta);
-      localStorage.setItem('cart', JSON.stringify(this.cestaDeLaCompra));
+      this.cestaDeLaCompraPrima = JSON.parse(
+        localStorage.getItem('cart') || ''
+      );
+      if (
+        this.buscarElementoCesta(
+          this.cestaDeLaCompraPrima,
+          this.juegoConsultado.IdJuego
+        ) != -1
+      ) {
+        this.aumentarInventarioCarrito(
+          this.cestaDeLaCompraPrima,
+          this.juegoConsultado.IdJuego
+        );
+      } else {
+        this.juegoParaLaCestaPrima = {
+          IdJuego: this.juegoConsultado.IdJuego,
+          NombreJuego: this.juegoConsultado.NombreJuego,
+          IdPlataforma: this.plataformas[0].IdPlataforma,
+          Precio: this.juegoConsultado.Precio,
+          Cantidad: 1,
+        };
+
+        this.cestaDeLaCompraPrima.push(this.juegoParaLaCestaPrima);
+        this._snackBar.open(
+          'Juego metido en el carro de la compra',
+          'Aceptar',
+          {
+            duration: this.durationInSeconds * 1000,
+          }
+        );
+      }
     }
-    this._snackBar.open('Juego metido en el carro de la compra', 'Aceptar', {
-      duration: this.durationInSeconds * 1000,
-    });
+    localStorage.setItem('cart', JSON.stringify(this.cestaDeLaCompraPrima));
   }
+
+  //Buscamos dentro del array de la cesta si ya hay un juego dentro con su id. De haberlo, aumenta la
+  //cantidad. En caso contrario, devuelve -1
+  // Busca el primer elemento con la edad indicada, sino devuelve -1
+  buscarElementoCesta(cesta: DatosCesta[], IdJuego: number) {
+    for (let i = 0; i < cesta.length; i++) {
+      const element = cesta[i];
+      if (element.IdJuego === IdJuego) {
+        return element;
+      }
+    }
+    return -1;
+  }
+
+  //Ya encontrado el juego en el array de la cesta, aumentamos su cantidad.
+  aumentarInventarioCarrito(cesta: DatosCesta[], IdJuego: number) {
+    for (let i = 0; i < cesta.length; i++) {
+      const element = cesta[i];
+      if (element.IdJuego === IdJuego) {
+        if (element.Cantidad == 5)
+          this._snackBar.open(
+            'Lo sentimos. Solo se permite la compra de un máximo de 5 copias del mismo producto en una sola compra.',
+            'Aceptar',
+            {
+              duration: this.durationInSeconds * 1000,
+            }
+          );
+        else {
+          element.Cantidad++;
+          this._snackBar.open(
+            'Juego metido en el carro de la compra',
+            'Aceptar',
+            {
+              duration: this.durationInSeconds * 1000,
+            }
+          );
+        }
+      }
+    }
+  }
+
   //Recibiendo desde la URL la iddeJuego, llama al servicio y recupera todos sus datos
   obtenerDatosdeJuegoporsuId() {
     this.activatedRoute.params

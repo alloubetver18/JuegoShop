@@ -1,20 +1,23 @@
 <section class="container">
   <h1>Cesta</h1>
   <div class="container__datos__cesta">
-    <section class="cesta" *ngIf="datosJuegosCestaLlena.length > 0 && cesta">
+    <section
+      class="cesta"
+      *ngIf="datosElementosCestaFormateados.length > 0 && cesta"
+    >
       <table
         mat-table
         #table
         [dataSource]="dataSource"
         class="mat-elevation-z8 demo-table tabla__cesta"
       >
-        <!-- Name Column -->
+        <!-- NombreJuego Column -->
         <ng-container matColumnDef="NombreJuego">
           <th mat-header-cell *matHeaderCellDef>Nombre</th>
           <td mat-cell *matCellDef="let element">{{ element.NombreJuego }}</td>
         </ng-container>
 
-        <!-- Weight Column -->
+        <!-- Plataforma Column -->
         <ng-container matColumnDef="IdPlataforma">
           <th mat-header-cell *matHeaderCellDef>Plataforma</th>
           <td mat-cell *matCellDef="let element">
@@ -24,6 +27,12 @@
               srcset=""
             />
           </td>
+        </ng-container>
+
+        <!-- Cantidad Column -->
+        <ng-container matColumnDef="Cantidad">
+          <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+          <td mat-cell *matCellDef="let element">{{ element.Cantidad }}</td>
         </ng-container>
 
         <!-- Symbol Column -->
@@ -48,19 +57,26 @@
     </section>
     <section
       class="spinner cesta_vacia"
-      *ngIf="datosJuegosCestaLlena.length == 0"
+      *ngIf="datosElementosCestaFormateados.length == 0"
     >
       <span class="mensaje_cesta_vacia"
         >La cesta se encuentra vacia en este momento.</span
       >
     </section>
     <section class="precio">
-      Aquí irá una caja con el cálculo del precio total y un botón para comprar
-      que, en teoría, mandaría a una página de método de pago.
+      <span class="precio__texto">Subtotal: {{ precioTotal }} €</span>
+      <a href="#" class="precio__cta" *ngIf="usuarioLogueado">Comprar</a>
+      <span class="precio__noLogueado" *ngIf="!usuarioLogueado"
+        >Lo sentimos, no puede comprar en este momento</span
+      >
     </section>
   </div>
 
   <section class="datos">
+    <div class="datos__nouser">
+      En estos momentos no se encuentra logueado en nuestro sistema, por lo que
+      no puede
+    </div>
     Aquí irá una caja con los datos del comprador (su Email)
   </section>
 </section>

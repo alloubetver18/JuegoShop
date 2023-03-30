@@ -50,7 +50,8 @@ export class MenuComponent implements OnInit {
         if (result.Recordar)
           localStorage.setItem('user', this.usuarioVacio.id + '');
         else sessionStorage.setItem('user', this.usuarioVacio.id + '');
-        this.router.navigate(['/']);
+        console.log('Logueado desde: ', this.router.url);
+        this.router.navigate([this.router.url]);
       }
     });
   }
@@ -60,5 +61,7 @@ export class MenuComponent implements OnInit {
     if (localStorage.getItem('user') != null) localStorage.removeItem('user');
     if (sessionStorage.getItem('user') != null)
       sessionStorage.removeItem('user');
+    console.log('Deslogueado desde: ', this.router.url);
+    this.router.navigate([this.router.url]);
   }
 }

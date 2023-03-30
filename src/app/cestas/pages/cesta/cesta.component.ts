@@ -4,11 +4,14 @@ import { JuegosService } from 'src/app/juegos/services/juegos.service';
 import { MatTable } from '@angular/material/table';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable, ReplaySubject } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export interface DatosCesta {
-  idJuego: number;
-  idPlataforma: number;
+  IdJuego: number;
+  NombreJuego: string;
+  IdPlataforma: number;
   Precio: number;
+  Cantidad: number;
 }
 
 export interface PeriodicElement {
@@ -18,7 +21,7 @@ export interface PeriodicElement {
   symbol: string;
 }
 
-let ELEMENT_CART: JuegoShort[] = [];
+let ELEMENT_CART: DatosCesta[] = [];
 
 @Component({
   selector: 'app-cesta',
@@ -33,19 +36,23 @@ export class CestaComponent {
     'NombreJuego',
     'IdPlataforma',
     'Precio',
+    'Cantidad',
     'Borrar',
   ];
   dataSource = ELEMENT_CART;
 
-  cesta: boolean = false;
+  cesta: boolean = true;
+  usuarioLogueado: boolean = false;
   cestaLlena: string = '';
   elementosCesta: string[] = [];
   datosElementosCesta: string[] = [];
   datosElementosCestaFormateados: DatosCesta[] = [];
   infoDatosCesta: DatosCesta = {
-    idJuego: 0,
-    idPlataforma: 0,
+    IdJuego: 0,
+    NombreJuego: '',
+    IdPlataforma: 0,
     Precio: 0.0,
+    Cantidad: 0,
   };
 
   datosJuegosCestaLlena: JuegoShort[] = [];
@@ -58,7 +65,9 @@ export class CestaComponent {
 
   precioTotal: number = 0;
 
-  constructor() {
+  constructor(private router: Router) {
+    console.log(this.router.url);
+    this.comprobarUsuario();
     this.obtenerDatosCesta();
   }
 
@@ -70,7 +79,6 @@ export class CestaComponent {
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    console.log('Entra en AfterViewInit');
   }
 
   ngAfterViewChecked(): void {
@@ -83,6 +91,14 @@ export class CestaComponent {
     //Add 'implements OnDestroy' to the class.
     console.log('saliendo');
     this.vaciarTabla();
+  }
+
+  //Si el usuario está logueado, recuperamos sus datos y cambiamos la variable booleana de control.
+  comprobarUsuario() {
+    if (sessionStorage.getItem('user') == null) this.usuarioLogueado = false;
+    else {
+      this.usuarioLogueado = true;
+    }
   }
 
   obtenerDatosCesta() {
@@ -103,43 +119,55 @@ export class CestaComponent {
   //Precio
   //y los almacena en un array para los datos formateados llamado datosElementosCestaFormateados
   formatearDatosLocalStorage() {
-    this.datosJuegosCestaLlena = JSON.parse(localStorage.getItem('cart') || '');
+    if (localStorage.getItem('cart'))
+      this.datosElementosCestaFormateados = JSON.parse(
+        localStorage.getItem('cart') || ''
+      );
   }
   //Función que, para cada elemento de datosElementosCestaFormateados, llamará al servicio y obtendrá,
   //en base a su IdJuego, su NombreJuego y, utilizando el nombre y los datos de cada elemento de
   //datosElementosCestaFormateados, llenará un nuevo array de tipo juegoShort que contendrá todos los
   //datos del juego mas su nombre.
   cargarCestaEnMemoria() {
-    this.datosJuegosCestaLlena.forEach((elementoCesta) => {
+    this.datosElementosCestaFormateados.forEach((elementoCesta) => {
+      console.log(elementoCesta);
       ELEMENT_CART.push(elementoCesta);
     });
   }
 
   borrarJuego(idJuegoBorrar: number) {
     console.log('Borrando juego con id: ', idJuegoBorrar);
+    console.log('Array a modificar: ', this.datosElementosCestaFormateados);
 
-    const resultado = this.datosJuegosCestaLlena.filter(
+    const resultado = this.datosElementosCestaFormateados.filter(
       (Juego) => Juego.IdJuego != idJuegoBorrar
     );
-    this.datosJuegosCestaLlena = resultado;
-    localStorage.setItem('cart', JSON.stringify(this.datosJuegosCestaLlena));
+    this.datosElementosCestaFormateados = resultado;
+    if (this.datosElementosCestaFormateados.length > 0)
+      localStorage.setItem(
+        'cart',
+        JSON.stringify(this.datosElementosCestaFormateados)
+      );
+    else localStorage.removeItem('cart');
     this.vaciarTabla();
     this.formatearDatosLocalStorage();
-    this.cargarCestaEnMemoria();
+    this.cargarCestaEnMemoria(); /**/
     this.calcularPrecioFinal();
     this.table.renderRows();
   }
 
   vaciarTabla() {
-    this.datosJuegosCestaLlena.length = 0;
+    this.datosElementosCestaFormateados.length = 0;
     ELEMENT_CART.length = 0;
     this.precioTotal = 0;
   }
 
   calcularPrecioFinal() {
     this.precioTotal = 0;
-    this.datosJuegosCestaLlena.forEach((element) => {
-      if (element.Precio != undefined) this.precioTotal += element.Precio;
+    this.datosElementosCestaFormateados.forEach((element) => {
+      if (element.Precio != undefined)
+        this.precioTotal += element.Precio * element.Cantidad;
     });
+    console.log('Precio total: ', this.precioTotal);
   }
 }
