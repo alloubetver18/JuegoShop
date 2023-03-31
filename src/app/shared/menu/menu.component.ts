@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Usuario } from 'src/app/auth/interfaces/usuarios.interfaces';
 import { ModalLoginComponent } from '../modal-login/modal-login.component';
@@ -20,8 +21,13 @@ export class MenuComponent implements OnInit {
   };
   usuarioEncontrado: Usuario[] = [];
   usuarioLogueado: boolean = false;
+  durationInSeconds: number = 3;
 
-  constructor(public dialog: MatDialog, private router: Router) {}
+  constructor(
+    public dialog: MatDialog,
+    private router: Router,
+    private _snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -46,10 +52,16 @@ export class MenuComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: Usuario) => {
       if (result) {
         this.usuarioVacio = result;
+        this.usuarioVacio.Pass = '';
+        this.usuarioVacio.ImgPerfil = '';
         this.usuarioLogueado = true;
         if (result.Recordar)
-          localStorage.setItem('user', this.usuarioVacio.id + '');
-        else sessionStorage.setItem('user', this.usuarioVacio.id + '');
+          localStorage.setItem('user', JSON.stringify(this.usuarioVacio) + '');
+        else
+          sessionStorage.setItem(
+            'user',
+            JSON.stringify(this.usuarioVacio) + ''
+          );
         console.log('Logueado desde: ', this.router.url);
         this.router.navigate([this.router.url]);
       }
@@ -62,6 +74,9 @@ export class MenuComponent implements OnInit {
     if (sessionStorage.getItem('user') != null)
       sessionStorage.removeItem('user');
     console.log('Deslogueado desde: ', this.router.url);
-    this.router.navigate([this.router.url]);
+    this._snackBar.open('Ha salido del sistema. Redireccionando', 'Aceptar', {
+      duration: this.durationInSeconds * 1000,
+    });
+    this.router.navigate(['/']);
   }
 }

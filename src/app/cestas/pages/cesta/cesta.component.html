@@ -65,9 +65,17 @@
     </section>
     <section class="precio">
       <span class="precio__texto">Subtotal: {{ precioTotal }} €</span>
-      <a href="#" class="precio__cta" *ngIf="usuarioLogueado">Comprar</a>
+      <a href="#" class="precio__cta" *ngIf="usuarioLogueado && precioTotal > 0"
+        >Comprar</a
+      >
       <span class="precio__noLogueado" *ngIf="!usuarioLogueado"
         >Lo sentimos, no puede comprar en este momento</span
+      >
+
+      <span
+        class="precio__noLogueado"
+        *ngIf="precioTotal == 0 && usuarioLogueado"
+        >El carro de la compra está vacio.</span
       >
     </section>
   </div>

@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+import { Usuario } from 'src/app/auth/interfaces/usuarios.interfaces';
+import { ModalLoginComponent } from 'src/app/shared/modal-login/modal-login.component';
 import {
   Juego,
   JuegoShort,
@@ -24,6 +27,17 @@ export interface DatosCesta {
   styleUrls: ['./datos-juego.component.css'],
 })
 export class DatosJuegoComponent {
+  usuarioVacio: Usuario = {
+    id: '',
+    Nombre: '',
+    Email: '',
+    Pass: '',
+    ImgPerfil: '',
+    Recordar: false,
+  };
+  usuarioEncontrado: Usuario[] = [];
+  usuarioLogueado: boolean = false;
+
   cestaDeLaCompra: JuegoShort[] = [];
   cestaDeLaCompraPrima: DatosCesta[] = [];
   juegoParaLaCestaPrima: DatosCesta = {
@@ -66,7 +80,9 @@ export class DatosJuegoComponent {
   constructor(
     private activatedRoute: ActivatedRoute,
     private juegosService: JuegosService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +91,15 @@ export class DatosJuegoComponent {
   //TODO Mediante JSON.stringify, convertir un array de objetos en una cadena JSON. Para recuperarlo,
   //utilizar JSON.parse();
   openSnackBar() {
-    if (localStorage.getItem('cart') == null) {
+    if (sessionStorage.getItem('user') == null) {
+      this._snackBar.open(
+        'No está logueado en el sistema. Por favor, loguéese',
+        'Aceptar',
+        {
+          duration: this.durationInSeconds * 1000,
+        }
+      );
+    } else if (localStorage.getItem('cart') == null) {
       this.juegoParaLaCestaPrima = {
         IdJuego: this.juegoConsultado.IdJuego,
         NombreJuego: this.juegoConsultado.NombreJuego,
