@@ -23,6 +23,11 @@ export interface PeriodicElement {
 
 let ELEMENT_CART: DatosCesta[] = [];
 
+interface Food {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-cesta',
   templateUrl: './cesta.component.html',
@@ -31,6 +36,17 @@ let ELEMENT_CART: DatosCesta[] = [];
 export class CestaComponent {
   @ViewChild(MatTable)
   table!: MatTable<PeriodicElement>;
+
+  cantidad: Food[] = [
+    { value: '1', viewValue: '1' },
+    { value: '2', viewValue: '2' },
+    { value: '3', viewValue: '3' },
+    { value: '4', viewValue: '4' },
+    { value: '5', viewValue: '5' },
+  ];
+
+  cantidadActual: string[] = [];
+  posicionCesta: number = 0;
 
   displayedColumns: string[] = [
     'NombreJuego',
@@ -132,9 +148,14 @@ export class CestaComponent {
     this.datosElementosCestaFormateados.forEach((elementoCesta) => {
       console.log(elementoCesta);
       ELEMENT_CART.push(elementoCesta);
+      this.cantidadActual[this.posicionCesta] =
+        elementoCesta.Cantidad.toString();
+      this.posicionCesta++;
     });
   }
 
+  //Tomando la id del juego a borrar, lo eliminamos del array del cual carga la tabla. Al mismo
+  //tiempo, lo borramos de LS y volvemos a cargar los datos.
   borrarJuego(idJuegoBorrar: number) {
     console.log('Borrando juego con id: ', idJuegoBorrar);
     console.log('Array a modificar: ', this.datosElementosCestaFormateados);
@@ -169,5 +190,43 @@ export class CestaComponent {
         this.precioTotal += element.Precio * element.Cantidad;
     });
     console.log('Precio total: ', this.precioTotal);
+  }
+
+  incrementarCantidad(idJuegoActualizar: number) {
+    this.datosElementosCestaFormateados.forEach((elementoCesta) => {
+      if (
+        elementoCesta.IdJuego == idJuegoActualizar &&
+        elementoCesta.Cantidad < 5
+      )
+        elementoCesta.Cantidad++;
+    });
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(this.datosElementosCestaFormateados)
+    );
+    this.vaciarTabla();
+    this.formatearDatosLocalStorage();
+    this.cargarCestaEnMemoria(); /**/
+    this.calcularPrecioFinal();
+    this.table.renderRows();
+  }
+
+  decrementarCantidad(idJuegoActualizar: number) {
+    this.datosElementosCestaFormateados.forEach((elementoCesta) => {
+      if (
+        elementoCesta.IdJuego == idJuegoActualizar &&
+        elementoCesta.Cantidad > 1
+      )
+        elementoCesta.Cantidad--;
+    });
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(this.datosElementosCestaFormateados)
+    );
+    this.vaciarTabla();
+    this.formatearDatosLocalStorage();
+    this.cargarCestaEnMemoria(); /**/
+    this.calcularPrecioFinal();
+    this.table.renderRows();
   }
 }

@@ -38,6 +38,23 @@
   overflow: hidden;
 }
 
+.selector__cantidad{
+  width: 60px;
+  padding-top: 25px;
+}
+
+.cantidades{
+  display: inline-block;
+  text-align: center;
+  font-size: 1.5rem;
+  color: blue;
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 .span__borrar{
   cursor: pointer;
 }
