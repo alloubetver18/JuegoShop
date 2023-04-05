@@ -13,6 +13,8 @@ import { ImagenPipe } from './pipes/imagen.pipe';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
 import { IconoPipe } from './pipes/icono.pipe';
+import { IconoIdPlataformaPipe } from './pipes/icono-id-plataforma.pipe';
+import { IconoidplataformacardPipe } from './pipes/iconoidplataformacard.pipe';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { IconoPipe } from './pipes/icono.pipe';
     CarrouselComponent,
     ImagenPipe,
     IconoPipe,
+    IconoidplataformacardPipe,
   ],
   imports: [CommonModule, JuegosRoutingModule, MaterialModule, FormsModule],
   exports: [JuegosRoutingModule],

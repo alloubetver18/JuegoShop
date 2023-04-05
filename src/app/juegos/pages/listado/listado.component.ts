@@ -41,6 +41,8 @@ export class ListadoComponent implements OnInit {
   checked = false;
   filtrosaAplicar: string[] = [];
 
+  idPlataformaActual: number = 0;
+
   value = '';
   precioMinimo = 10;
   precioMaximo = 200;
@@ -98,6 +100,7 @@ export class ListadoComponent implements OnInit {
         if (this.listaPlataformas.length == 0) {
           this.router.navigate(['/']);
         } else {
+          this.idPlataformaActual = this.listaPlataformas[0].IdPlataforma;
           this.obtenerListaIdsJuegosporListadePlataformas(
             this.listaPlataformas
           );
@@ -364,6 +367,7 @@ export class ListadoComponent implements OnInit {
         IdJuego: listaJuegos[i].IdJuego,
         NombreJuego: listaJuegos[i].NombreJuego,
         Precio: listaPrecios[i],
+        IdPlataforma: this.idPlataformaActual,
       };
       this.listaJuegos.push(juegonuevo);
     }

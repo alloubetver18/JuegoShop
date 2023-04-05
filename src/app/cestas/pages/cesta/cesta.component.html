@@ -103,10 +103,16 @@
   </div>
 
   <section class="datos">
-    <div class="datos__nouser">
+    <div class="datos__nouser" *ngIf="!usuarioLogueado">
       En estos momentos no se encuentra logueado en nuestro sistema, por lo que
       no puede
     </div>
-    Aquí irá una caja con los datos del comprador (su Email)
+    <div class="datos__user" *ngIf="usuarioLogueado">
+      <p>Datos del comprador:</p>
+      <p>Usuario: {{ datosUsuarioLogueado.Nombre }}</p>
+      <p>
+        Email al que se mandarán los códigos: {{ datosUsuarioLogueado.Email }}
+      </p>
+    </div>
   </section>
 </section>

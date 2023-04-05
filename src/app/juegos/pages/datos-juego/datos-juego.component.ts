@@ -77,6 +77,8 @@ export class DatosJuegoComponent {
 
   juegosGuardados: string = '';
 
+  stockJuego: boolean = true;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private juegosService: JuegosService,
@@ -99,7 +101,12 @@ export class DatosJuegoComponent {
           duration: this.durationInSeconds * 1000,
         }
       );
-    } else if (localStorage.getItem('cart') == null) {
+    } //TODO Si está el usuario en el sistema, comprobamos el inventario de la tienda.
+    //Para ello, debemos inyectar un servicio de... Juegos, que contendrá también una función
+    //para recuperar el inventario de codigos en base a un juego Y una plataforma.
+    //En el caso de recuperar un array de códigos con respecto a juego y plataforma con una
+    //longitud de 0, no podrás añadir juegos a la lista (PORQUE el botón no estará visible).
+    else if (localStorage.getItem('cart') == null) {
       this.juegoParaLaCestaPrima = {
         IdJuego: this.juegoConsultado.IdJuego,
         NombreJuego: this.juegoConsultado.NombreJuego,
@@ -236,4 +243,8 @@ export class DatosJuegoComponent {
         });
     });
   }
+
+  //TODO Buscamos, en función del juego y la plataforma seleccionadas, si hay inventario del juego en stock
+  //Si lo hay, la propiedad stockJuego pasará a ser True. Si no, pasará a ser False.
+  comprobarStock() {}
 }

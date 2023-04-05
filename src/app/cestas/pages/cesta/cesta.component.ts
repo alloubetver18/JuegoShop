@@ -5,6 +5,8 @@ import { MatTable } from '@angular/material/table';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable, ReplaySubject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Usuario } from 'src/app/auth/interfaces/usuarios.interfaces';
+import { Cesta } from '../../interfaces/cesta.interface';
 
 export interface DatosCesta {
   IdJuego: number;
@@ -59,6 +61,12 @@ export class CestaComponent {
 
   cesta: boolean = true;
   usuarioLogueado: boolean = false;
+  datosUsuarioLogueado: Usuario = {
+    id: '',
+    Nombre: '',
+    Email: '',
+    Pass: '',
+  };
   cestaLlena: string = '';
   elementosCesta: string[] = [];
   datosElementosCesta: string[] = [];
@@ -85,6 +93,14 @@ export class CestaComponent {
     console.log(this.router.url);
     this.comprobarUsuario();
     this.obtenerDatosCesta();
+    /* let fechaHoy = new Date();
+    let fechaActualFormateada =
+      fechaHoy.getFullYear().toString() +
+      '/' +
+      (fechaHoy.getMonth() + 1).toString() +
+      '/' +
+      fechaHoy.getDate().toString();
+    console.log(fechaActualFormateada); */
   }
 
   ngOnInit(): void {
@@ -113,6 +129,10 @@ export class CestaComponent {
   comprobarUsuario() {
     if (sessionStorage.getItem('user') == null) this.usuarioLogueado = false;
     else {
+      console.log(sessionStorage.getItem('user'));
+      this.datosUsuarioLogueado = JSON.parse(
+        sessionStorage.getItem('user') || ''
+      );
       this.usuarioLogueado = true;
     }
   }
@@ -177,12 +197,14 @@ export class CestaComponent {
     this.table.renderRows();
   }
 
+  //Limpiamos los datos contenidos en el Mat-table
   vaciarTabla() {
     this.datosElementosCestaFormateados.length = 0;
     ELEMENT_CART.length = 0;
     this.precioTotal = 0;
   }
 
+  //En base a los juegos que existen dentro de la cesta, calculamos su precio total.
   calcularPrecioFinal() {
     this.precioTotal = 0;
     this.datosElementosCestaFormateados.forEach((element) => {
@@ -192,6 +214,8 @@ export class CestaComponent {
     console.log('Precio total: ', this.precioTotal);
   }
 
+  //Incrementamos la cantidad de unidades de un determinado juego que hay en la cesta. Se actualiza tanto
+  //en la tabla como en LS
   incrementarCantidad(idJuegoActualizar: number) {
     this.datosElementosCestaFormateados.forEach((elementoCesta) => {
       if (
@@ -210,7 +234,8 @@ export class CestaComponent {
     this.calcularPrecioFinal();
     this.table.renderRows();
   }
-
+  //Decrementamos la cantidad de unidades de un determinado juego que hay en la cesta. Se actualiza tanto
+  //en la tabla como en LS
   decrementarCantidad(idJuegoActualizar: number) {
     this.datosElementosCestaFormateados.forEach((elementoCesta) => {
       if (
@@ -229,4 +254,93 @@ export class CestaComponent {
     this.calcularPrecioFinal();
     this.table.renderRows();
   }
+
+  comprarProductosCestaCompra() {
+    let nuevaIdCesta = 0;
+    let idUsuarioActivo = parseInt(this.datosUsuarioLogueado.id);
+    let emailUsuarioActivo = this.datosUsuarioLogueado.Email;
+    let fechaActual = new Date();
+    let fechaActualFormateada =
+      fechaActual.getFullYear().toString +
+      '/' +
+      (fechaActual.getMonth() + 1).toString +
+      '/' +
+      fechaActual.getDate().toString;
+    let precioTotal = this.precioTotal;
+    let compraExitosa = true;
+    let cestaCompraCompleta = this.datosElementosCestaFormateados;
+    let listaIdsCodigos: number[] = [];
+    let InfoNuevaCesta: Cesta = {
+      idCesta: 0,
+      idUsuario: 0,
+      Email: '',
+      Fecha: '',
+      PrecioTotal: 0,
+      CompraFinalizada: false,
+    };
+
+    //1.1 Obtenemos la última IdCesta que exista
+    /* nuevaIdCesta = obtenerUltimaIdCesta() + 1; */
+    //1.2 Creamos una nueva cesta y la recuperamos
+    InfoNuevaCesta = {
+      idCesta: nuevaIdCesta,
+      idUsuario: idUsuarioActivo,
+      Email: emailUsuarioActivo,
+      Fecha: fechaActualFormateada,
+      PrecioTotal: precioTotal,
+      CompraFinalizada: true,
+    };
+
+    //1.3 La guardamos en la BD
+    /* guardarCompraenelSistema(InfoNuevaCesta); */
+    //2.1 Tomamos el Array de la cesta de la compra
+    //Por cada elemento de la cesta (un bucle por cada elemento de la cesta):
+    //Un bucle por la cantidad de cada elemento de la cesta
+    //En cada iteración, recuperamos el id de un código válido para el juego y la plataforma correctas.
+    //Para que esté disponible, Su valor de Disponible debe ser True
+    //En el caso de no haberlo, ¿cancelar el proceso? No, porque si no hay suficiente, no deja añadirlo.
+    //Las comprobaciones las realiza en la página del juego.
+    //El identificador del código se almacena en un array de codigos a comprar
+    //2.2 Una vez almacenado, cambiar el valor de Disponible a False
+    //3.1 Obtenemos el id del último CodigoCesta
+    //3.2 A partir de él, y utilizando el IdCesta almacenado, recorremos el array de Códigos asignados
+    //Para la cesta los vamos añadiendo en CodigosCesta con los siguientes datos:
+    //IdCodigo: Iteración del bucle
+    //IdCesta: El almacenado en memoria.
+  }
+
+  /* TODO Teniendo una serie de elementos, programar que se almacene en la BD la compra de uno
+  o más productos añadidos a la cesta de la compra. Para ello, se seguirá el siguiente procedimiento:
+  1.- Tomamos los siguientes datos del sistema:
+    - Último ID de cesta disponible (para generar una id nueva, o bien crear una nueva id a partir de
+      ciertos datos. Como en estos momentos la id de la cesta es numérica, opto por recuperar
+      la última id existente).
+    - La Id del usuario activo.
+    - El email del usuario activo.
+    - La fecha de hoy
+    - El precio total de la compra
+    - Una variable booleana que apuntará a que la compra ha sido exitosa
+
+    Con estos datos, creamos un nuevo registro en la tabla Cestas. Guardamos la id de la cesta, porque
+    nos hará falta.
+
+  2.- Teniendo el array con la lista de juegos, lo recorremos uno a uno. Utilizando los siguientes datos:
+    - Id del Juego
+    - Id de la plataforma
+    - Cantidad
+
+    Buscaremos dentro de la tabla que relaciona los juegos y sus plataformas con los códigos de los
+    juegos, y buscaremos tantos códigos válidos como pueda. Teniendo en cuenta que, los posibles
+    valores de tabla son:
+    - IdCodigo
+    - IdJuego (lo tenemos)
+    - IdPlataforma (lo tenemos)
+    - Valido (DEBE SER TRUE, y después cambiar a False)
+    - Código (dato que nos interesa)
+
+  3.- Cada código que seleccionemos se relacionará directamente en una nueva tabla llamada
+    CodigosCesta, para la cual necesitaremos, por cada código obtenido:
+    - IdCodigoCesta (se creará a partir del último asignado)
+    - IdCodigo (cada uno de los obtenidos)
+    - IdCesta (lo tenemos de antes)*/
 }

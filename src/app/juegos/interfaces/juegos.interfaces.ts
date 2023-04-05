@@ -4,7 +4,7 @@ export interface DBJuegoshopBeta {
   Juegos: Juego[];
   Plataformas: Plataforma[];
   JuegosPlataformas: JuegosPlataforma[];
-  Codigos: Codigo[];
+  Codigos: Codigos[];
   Cestas: Cesta[];
   CodigosCestas: CodigosCesta[];
 }
@@ -16,10 +16,12 @@ export interface Cesta {
   Fecha: string;
 }
 
-export interface Codigo {
+export interface Codigos {
+  idCodigo: number;
   idJuegoCodigo: number;
   IdJuegoPlataforma: number;
   Codigo: number;
+  Disponible: boolean;
 }
 
 export interface CodigosCesta {

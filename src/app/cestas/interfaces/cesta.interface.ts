@@ -3,6 +3,8 @@ export interface Cesta {
   idUsuario: number;
   Email: string;
   Fecha: string;
+  PrecioTotal: number;
+  CompraFinalizada: boolean;
 }
 
 export interface Codigo {

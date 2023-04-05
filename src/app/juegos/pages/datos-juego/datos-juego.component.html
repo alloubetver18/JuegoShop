@@ -23,10 +23,16 @@
           </span>
         </div>
       </h1>
-      <h3>Precio: {{ juegoConsultado.Precio }}</h3>
-      <button class="btn btn-primary" (click)="openSnackBar()">
-        Añadir al carrito
-      </button>
+      <div class="precio" *ngIf="stockJuego">
+        <h3>Precio: {{ juegoConsultado.Precio }}</h3>
+        <button class="btn btn-primary" (click)="openSnackBar()">
+          Añadir al carrito
+        </button>
+      </div>
+      <div class="no__disponible" *ngIf="!stockJuego">
+        <p>No hay existencias en estos momentos.</p>
+      </div>
+
       <br />
       <hr />
       <p>

@@ -1,7 +1,18 @@
 <div class="card">
   <img [src]="infojuego.IdJuego | imagen" class="card-img-top" alt="..." />
   <div class="card-body">
-    <h3 class="card-title">{{ infojuego.NombreJuego }}</h3>
+    <div class="iconoplataforma">
+      <h3 class="card-title">
+        {{ infojuego.NombreJuego }}
+      </h3>
+      <img
+        *ngIf="infojuego.IdPlataforma"
+        [src]="infojuego.IdPlataforma | iconoidplataformacard"
+        class="card-icon-platform"
+        alt="..."
+      />
+    </div>
+
     <p class="card-text">{{ infojuego.Precio }}€</p>
     <a
       *ngIf="estaEnElPadre"

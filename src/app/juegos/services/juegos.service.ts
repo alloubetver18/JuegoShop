@@ -6,6 +6,7 @@ import {
   Juego,
   Plataforma,
   JuegosPlataforma,
+  Codigos,
 } from '../interfaces/juegos.interfaces';
 
 @Injectable({
@@ -107,6 +108,18 @@ export class JuegosService {
   getPlataformasporDescriptor(descriptor: string): Observable<Plataforma[]> {
     return this.http.get<Plataforma[]>(
       `${this.baseURL}/Plataformas?NombrePlataforma_like=${descriptor}`
+    );
+  }
+
+  //TODO Teniendo un id de juego y un id de plataforma, obtener todos los códigos correspondientes a
+  //dicho juego
+
+  getCodigosporJuegoyPlataforma(
+    idJuego: number,
+    idPlataforma: number
+  ): Observable<Codigos[]> {
+    return this.http.get<Codigos[]>(
+      `${this.baseURL}/Codigos?IdJuegoCodigo=${idJuego}&IdJuegoPlataforma=${idPlataforma}&Disponible=true`
     );
   }
 
