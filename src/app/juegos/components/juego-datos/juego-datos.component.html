@@ -17,13 +17,13 @@
     <a
       *ngIf="estaEnElPadre"
       class="btn btn-primary"
-      [routerLink]="['listado/juego/', infojuego.IdJuego]"
+      [routerLink]="['listado/juego/', idJuegoPlataforma]"
       >Más Informacion</a
     >
     <a
       *ngIf="!estaEnElPadre"
       class="btn btn-primary"
-      [routerLink]="['../juego/', infojuego.IdJuego]"
+      [routerLink]="['../juego/', idJuegoPlataforma]"
       >Más Informacion</a
     >
   </div>

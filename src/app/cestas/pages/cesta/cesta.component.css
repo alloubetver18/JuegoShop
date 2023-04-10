@@ -38,6 +38,11 @@
   overflow: hidden;
 }
 
+.icono_plataforma{
+  width: 35px;
+  height: 35px;
+}
+
 .selector__cantidad{
   width: 60px;
   padding-top: 25px;

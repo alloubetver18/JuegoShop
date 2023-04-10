@@ -176,12 +176,19 @@ export class CestaComponent {
 
   //Tomando la id del juego a borrar, lo eliminamos del array del cual carga la tabla. Al mismo
   //tiempo, lo borramos de LS y volvemos a cargar los datos.
-  borrarJuego(idJuegoBorrar: number) {
+  borrarJuego(idJuegoBorrar: number, idPlataformaBorrar: number) {
     console.log('Borrando juego con id: ', idJuegoBorrar);
+    console.log('Borrar juego de plataforma: ', idPlataformaBorrar);
     console.log('Array a modificar: ', this.datosElementosCestaFormateados);
-
+    this.datosElementosCestaFormateados.forEach((element) => {
+      if (
+        element.IdJuego === idJuegoBorrar &&
+        element.IdPlataforma === idPlataformaBorrar
+      )
+        element.IdPlataforma = 0;
+    });
     const resultado = this.datosElementosCestaFormateados.filter(
-      (Juego) => Juego.IdJuego != idJuegoBorrar
+      (Juego) => Juego.IdPlataforma != 0
     );
     this.datosElementosCestaFormateados = resultado;
     if (this.datosElementosCestaFormateados.length > 0)
@@ -216,10 +223,14 @@ export class CestaComponent {
 
   //Incrementamos la cantidad de unidades de un determinado juego que hay en la cesta. Se actualiza tanto
   //en la tabla como en LS
-  incrementarCantidad(idJuegoActualizar: number) {
+  incrementarCantidad(
+    idJuegoActualizar: number,
+    idPlataformaActualizar: number
+  ) {
     this.datosElementosCestaFormateados.forEach((elementoCesta) => {
       if (
         elementoCesta.IdJuego == idJuegoActualizar &&
+        elementoCesta.IdPlataforma == idPlataformaActualizar &&
         elementoCesta.Cantidad < 5
       )
         elementoCesta.Cantidad++;
@@ -236,10 +247,14 @@ export class CestaComponent {
   }
   //Decrementamos la cantidad de unidades de un determinado juego que hay en la cesta. Se actualiza tanto
   //en la tabla como en LS
-  decrementarCantidad(idJuegoActualizar: number) {
+  decrementarCantidad(
+    idJuegoActualizar: number,
+    idPlataformaActualizar: number
+  ) {
     this.datosElementosCestaFormateados.forEach((elementoCesta) => {
       if (
         elementoCesta.IdJuego == idJuegoActualizar &&
+        elementoCesta.IdPlataforma == idPlataformaActualizar &&
         elementoCesta.Cantidad > 1
       )
         elementoCesta.Cantidad--;

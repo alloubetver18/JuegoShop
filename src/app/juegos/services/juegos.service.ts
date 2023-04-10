@@ -123,6 +123,16 @@ export class JuegosService {
     );
   }
 
+  //Obtener precio de un juego por su IdJuego y su IdPlataforma
+  getPreciosJuegosporJuegoyPlataforma(
+    idJuego: number,
+    idPlataforma: number
+  ): Observable<JuegosPlataforma[]> {
+    return this.http.get<JuegosPlataforma[]>(
+      `${this.baseURL}/JuegosPlataformas?IdJuego=${idJuego}&IdPlataforma=${idPlataforma}`
+    );
+  }
+
   //TODO Métodos para el Admin: Agregar, Modificar y Borrar juegos
   //NOTA Esto probablemente irá en la sección protected
   agregarJuego() {}

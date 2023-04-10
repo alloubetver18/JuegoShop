@@ -12,7 +12,7 @@
     </section>
     <section class="subbox">
       <h1>
-        plataforma:
+        plataformas:
         <div class="iconos">
           <span class="icono" *ngFor="let item of plataformas">
             <img
@@ -23,6 +23,15 @@
           </span>
         </div>
       </h1>
+      <div class="plataformaSeleccionada">
+        <h3>
+          Plataforma Seleccionada:
+          <img
+            class="icono_img_plataforma"
+            [src]="juegoRecibidoParam.IdPlataforma | iconoidplataformacard"
+          />
+        </h3>
+      </div>
       <div class="precio" *ngIf="stockJuego">
         <h3>Precio: {{ juegoConsultado.Precio }}</h3>
         <button class="btn btn-primary" (click)="openSnackBar()">

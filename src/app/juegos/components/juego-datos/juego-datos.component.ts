@@ -13,5 +13,15 @@ export class JuegoDatosComponent {
   @Input() infojuego!: JuegoShort;
   @Input() estaEnElPadre = true;
   ruta!: string;
+  idJuegoPlataforma: string = '';
   constructor() {}
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.idJuegoPlataforma = JSON.stringify({
+      IdJuego: this.infojuego.IdJuego,
+      IdPlataforma: this.infojuego.IdPlataforma,
+    });
+  }
 }

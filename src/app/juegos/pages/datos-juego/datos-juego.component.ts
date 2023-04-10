@@ -27,6 +27,11 @@ export interface DatosCesta {
   styleUrls: ['./datos-juego.component.css'],
 })
 export class DatosJuegoComponent {
+  juegoRecibidoParam = {
+    IdJuego: 0,
+    IdPlataforma: 0,
+  };
+  cadenaJuegoRecibidoParam: string = '';
   usuarioVacio: Usuario = {
     id: '',
     Nombre: '',
@@ -110,7 +115,7 @@ export class DatosJuegoComponent {
       this.juegoParaLaCestaPrima = {
         IdJuego: this.juegoConsultado.IdJuego,
         NombreJuego: this.juegoConsultado.NombreJuego,
-        IdPlataforma: this.plataformas[0].IdPlataforma,
+        IdPlataforma: this.juegoRecibidoParam.IdPlataforma,
         Precio: this.juegoConsultado.Precio,
         Cantidad: 1,
       };
@@ -125,18 +130,20 @@ export class DatosJuegoComponent {
       if (
         this.buscarElementoCesta(
           this.cestaDeLaCompraPrima,
-          this.juegoConsultado.IdJuego
+          this.juegoConsultado.IdJuego,
+          this.juegoRecibidoParam.IdPlataforma
         ) != -1
       ) {
         this.aumentarInventarioCarrito(
           this.cestaDeLaCompraPrima,
-          this.juegoConsultado.IdJuego
+          this.juegoConsultado.IdJuego,
+          this.juegoRecibidoParam.IdPlataforma
         );
       } else {
         this.juegoParaLaCestaPrima = {
           IdJuego: this.juegoConsultado.IdJuego,
           NombreJuego: this.juegoConsultado.NombreJuego,
-          IdPlataforma: this.plataformas[0].IdPlataforma,
+          IdPlataforma: this.juegoRecibidoParam.IdPlataforma,
           Precio: this.juegoConsultado.Precio,
           Cantidad: 1,
         };
@@ -157,10 +164,17 @@ export class DatosJuegoComponent {
   //Buscamos dentro del array de la cesta si ya hay un juego dentro con su id. De haberlo, aumenta la
   //cantidad. En caso contrario, devuelve -1
   // Busca el primer elemento con la edad indicada, sino devuelve -1
-  buscarElementoCesta(cesta: DatosCesta[], IdJuego: number) {
+  buscarElementoCesta(
+    cesta: DatosCesta[],
+    IdJuego: number,
+    IdPlataforma: number
+  ) {
     for (let i = 0; i < cesta.length; i++) {
       const element = cesta[i];
-      if (element.IdJuego === IdJuego) {
+      if (
+        element.IdJuego === IdJuego &&
+        element.IdPlataforma === IdPlataforma
+      ) {
         return element;
       }
     }
@@ -168,10 +182,17 @@ export class DatosJuegoComponent {
   }
 
   //Ya encontrado el juego en el array de la cesta, aumentamos su cantidad.
-  aumentarInventarioCarrito(cesta: DatosCesta[], IdJuego: number) {
+  aumentarInventarioCarrito(
+    cesta: DatosCesta[],
+    IdJuego: number,
+    IdPlataforma: number
+  ) {
     for (let i = 0; i < cesta.length; i++) {
       const element = cesta[i];
-      if (element.IdJuego === IdJuego) {
+      if (
+        element.IdJuego === IdJuego &&
+        element.IdPlataforma === IdPlataforma
+      ) {
         if (element.Cantidad == 5)
           this._snackBar.open(
             'Lo sentimos. Solo se permite la compra de un máximo de 5 copias del mismo producto en una sola compra.',
@@ -196,8 +217,17 @@ export class DatosJuegoComponent {
 
   //Recibiendo desde la URL la iddeJuego, llama al servicio y recupera todos sus datos
   obtenerDatosdeJuegoporsuId() {
+    this.activatedRoute.paramMap.subscribe((id) => {
+      this.cadenaJuegoRecibidoParam = id.get('id') || '';
+      this.juegoRecibidoParam = JSON.parse(this.cadenaJuegoRecibidoParam);
+      console.log(this.juegoRecibidoParam);
+    });
     this.activatedRoute.params
-      .pipe(switchMap(({ id }) => this.juegosService.getJuegoPorId(id)))
+      .pipe(
+        switchMap(({ id }) =>
+          this.juegosService.getJuegoPorId(this.juegoRecibidoParam.IdJuego)
+        )
+      )
       .subscribe((juego) => {
         this.juegoConsultado = {
           IdJuego: juego[0].IdJuego,
@@ -222,7 +252,10 @@ export class DatosJuegoComponent {
       .getPlataformasdeJuegoporId(iddeJuego)
       .subscribe((plataformasJuego) => {
         this.plataformasJuego = plataformasJuego;
-        this.juegoConsultado.Precio = this.plataformasJuego[0].Precio;
+        this.plataformasJuego.forEach((element) => {
+          if (element.IdPlataforma == this.juegoRecibidoParam.IdPlataforma)
+            this.juegoConsultado.Precio = element.Precio;
+        });
         this.obtenerListadePlataformasdeJuego(this.plataformasJuego);
       });
   }
