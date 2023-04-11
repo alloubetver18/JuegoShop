@@ -119,7 +119,7 @@ export class JuegosService {
     idPlataforma: number
   ): Observable<Codigos[]> {
     return this.http.get<Codigos[]>(
-      `${this.baseURL}/Codigos?IdJuegoCodigo=${idJuego}&IdJuegoPlataforma=${idPlataforma}&Disponible=true`
+      `${this.baseURL}/Codigos?idJuegoCodigo=${idJuego}&idJuegoPlataforma=${idPlataforma}&Disponible=true`
     );
   }
 

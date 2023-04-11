@@ -21,6 +21,12 @@ export interface DatosCesta {
   Cantidad: number;
 }
 
+export interface IdJuegoPlataforma {
+  IdJuego: number;
+  IdPlataforma: number;
+  cadena: string;
+}
+
 @Component({
   selector: 'app-datos-juego',
   templateUrl: './datos-juego.component.html',
@@ -72,6 +78,7 @@ export class DatosJuegoComponent {
   };
   plataformasJuego: JuegosPlataforma[] = [];
   plataformas: Plataforma[] = [];
+  idJuegoPlataforma: IdJuegoPlataforma[] = [];
   indiceplataforma: number = 0;
   nuevaplataforma: Plataforma = {
     IdPlataforma: 0,
@@ -82,7 +89,7 @@ export class DatosJuegoComponent {
 
   juegosGuardados: string = '';
 
-  stockJuego: boolean = true;
+  stockJuego!: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -220,7 +227,7 @@ export class DatosJuegoComponent {
     this.activatedRoute.paramMap.subscribe((id) => {
       this.cadenaJuegoRecibidoParam = id.get('id') || '';
       this.juegoRecibidoParam = JSON.parse(this.cadenaJuegoRecibidoParam);
-      console.log(this.juegoRecibidoParam);
+      this.comprobarStock();
     });
     this.activatedRoute.params
       .pipe(
@@ -244,6 +251,7 @@ export class DatosJuegoComponent {
           this.juegoConsultado.IdJuego
         );
       });
+    this.comprobarStock();
   }
   //Recibiendo como parámetro la iddeJuego, llama al servicio y recupera las plataformas para las
   // que dicho juego está disponible
@@ -262,6 +270,7 @@ export class DatosJuegoComponent {
   //Recibiendo como parámetro el array de pares de un juego y sus plataformas, llama al servicio
   //por cada una y recupera los datos de las plataformas para dicho juego.
   obtenerListadePlataformasdeJuego(plataformasJuego: JuegosPlataforma[]) {
+    if (this.idJuegoPlataforma.length > 0) this.idJuegoPlataforma.length = 0;
     plataformasJuego.forEach((parjuegoplataforma) => {
       this.juegosService
         .getPlataformaporId(parjuegoplataforma.IdPlataforma)
@@ -270,14 +279,38 @@ export class DatosJuegoComponent {
             IdPlataforma: plataformas[0].IdPlataforma,
             NombrePlataforma: plataformas[0].NombrePlataforma,
           };
+          this.idJuegoPlataforma.push({
+            IdJuego: this.juegoRecibidoParam.IdJuego,
+            IdPlataforma: plataformas[0].IdPlataforma,
+            cadena: JSON.stringify({
+              IdJuego: this.juegoRecibidoParam.IdJuego,
+              IdPlataforma: plataformas[0].IdPlataforma,
+            }),
+          });
           if (this.plataformas.indexOf(this.nuevaplataforma) === -1) {
             this.plataformas.push(this.nuevaplataforma);
           }
+          //Ordenar array de plataformas para que aparezca ordenado por la IdPlataforma
+          this.idJuegoPlataforma.sort(function (a, b) {
+            if (a.IdPlataforma < b.IdPlataforma) return -1;
+            else if (a.IdPlataforma > b.IdPlataforma) return 1;
+            else return 0;
+          });
         });
     });
   }
 
-  //TODO Buscamos, en función del juego y la plataforma seleccionadas, si hay inventario del juego en stock
+  //Buscamos, en función del juego y la plataforma seleccionadas, si hay inventario del juego en stock
   //Si lo hay, la propiedad stockJuego pasará a ser True. Si no, pasará a ser False.
-  comprobarStock() {}
+  comprobarStock() {
+    this.juegosService
+      .getCodigosporJuegoyPlataforma(
+        this.juegoRecibidoParam.IdJuego,
+        this.juegoRecibidoParam.IdPlataforma
+      )
+      .subscribe((cod) => {
+        if (cod.length > 0) this.stockJuego = true;
+        else this.stockJuego = false;
+      });
+  }
 }

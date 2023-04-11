@@ -14,12 +14,18 @@
       <h1>
         plataformas:
         <div class="iconos">
-          <span class="icono" *ngFor="let item of plataformas">
-            <img
-              class="icono_img"
-              [src]="item.NombrePlataforma | icono"
-              [alt]="item.NombrePlataforma"
-            />
+          <span class="icono" *ngFor="let item of idJuegoPlataforma">
+            <a
+              href=""
+              class="juego__plataforma__link"
+              [routerLink]="['../../../listado/juego/', item.cadena]"
+            >
+              <img
+                class="icono_img"
+                [src]="item.IdPlataforma | iconoidplataformacard"
+                [alt]=""
+              />
+            </a>
           </span>
         </div>
       </h1>
