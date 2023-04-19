@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { catchError, switchMap } from 'rxjs';
 import { Usuario } from 'src/app/auth/interfaces/usuarios.interfaces';
 import { ModalLoginComponent } from 'src/app/shared/modal-login/modal-login.component';
 import {
@@ -224,11 +224,12 @@ export class DatosJuegoComponent {
 
   //Recibiendo desde la URL la iddeJuego, llama al servicio y recupera todos sus datos
   obtenerDatosdeJuegoporsuId() {
-    this.activatedRoute.paramMap.subscribe((id) => {
+    this.activatedRoute.paramMap.subscribe((id: any) => {
       this.cadenaJuegoRecibidoParam = id.get('id') || '';
       this.juegoRecibidoParam = JSON.parse(this.cadenaJuegoRecibidoParam);
       this.comprobarStock();
     });
+
     this.activatedRoute.params
       .pipe(
         switchMap(({ id }) =>
